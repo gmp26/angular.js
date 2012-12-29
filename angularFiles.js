@@ -1,4 +1,6 @@
 angularFiles = {
+
+	// standard angular stuff
   'angularSrc': [
     'src/Angular.js',
     'src/loader.js',
@@ -68,6 +70,7 @@ angularFiles = {
     'src/ngSanitize/sanitize.js',
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
+		'src/mgc/funcGen.js',
     'src/ngMock/angular-mocks.js',
 
     'src/bootstrap/bootstrap.js'
@@ -107,9 +110,11 @@ angularFiles = {
     'test/ngSanitize/*.js',
     'test/ngSanitize/directive/*.js',
     'test/ngSanitize/filter/*.js',
-    'test/ngMock/*.js'
+    'test/ngMock/*.js',
+		'test/mgc/funcGenSpec.js'
   ],
 
+	
   'jstd': [
     'lib/jasmine/jasmine.js',
     'lib/jasmine-jstd-adapter/JasmineAdapter.js',
@@ -148,13 +153,15 @@ angularFiles = {
     'src/ngSanitize/sanitize.js',
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
+		'src/mgc/funcGen.js',
     'test/matchers.js',
     'test/ngMock/*.js',
     'test/ngCookies/*.js',
     'test/ngResource/*.js',
     'test/ngSanitize/*.js',
     'test/ngSanitize/directive/*.js',
-    'test/ngSanitize/filter/*.js'
+    'test/ngSanitize/filter/*.js',
+		'test/mgc/funcGenSpec.js'
   ],
 
   'jstdPerf': [
@@ -197,7 +204,7 @@ angularFiles = {
 };
 
 if (exports) {
-  exports.files = angularFiles
+  exports.files = angularFiles;
   exports.mergeFiles = function mergeFiles() {
     var files = [];
 
@@ -212,7 +219,7 @@ if (exports) {
             var deps = angularFiles[match[1]];
             files = files.concat(deps);
           } else {
-            if (!/jstd|jasmine/.test(f)) { //TODO(i): remove once we don't have jstd/jasmine in repo
+            if (!(/jstd|jasmine/.test(f))) { //TODO(i): remove once we don't have jstd/jasmine in repo
               files.push(f);
             }
           }
@@ -221,5 +228,5 @@ if (exports) {
     });
 
     return files;
-  }
+  };
 }

@@ -73,7 +73,6 @@ task :concat => :init do
       'src/loader.js',
       'src/loader.suffix'])
 
-
   concat_module('sanitize', [
       'src/ngSanitize/sanitize.js',
       'src/ngSanitize/directive/ngBindHtml.js',
@@ -85,6 +84,10 @@ task :concat => :init do
   concat_module('bootstrap-prettify', ['src/bootstrap/bootstrap-prettify.js',
                                        'src/bootstrap/google-prettify/prettify.js'],
                                gen_css('src/bootstrap/google-prettify/prettify.css', true))
+
+  concat_module('mgc', [
+      'src/mgc/funcGen.js',
+      ])
 
 
   FileUtils.cp 'src/ngMock/angular-mocks.js', path_to('angular-mocks.js')
@@ -103,7 +106,8 @@ task :minify => [:init, :concat, :concat_scenario] do
     'angular-resource.js',
     'angular-sanitize.js',
     'angular-bootstrap.js',
-    'angular-bootstrap-prettify.js'
+    'angular-bootstrap-prettify.js',
+    'angular-mgc.js'
   ].each do |file|
     fork { closure_compile(file) }
   end
