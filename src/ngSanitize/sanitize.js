@@ -44,7 +44,7 @@
        <script>
          function Ctrl($scope) {
            $scope.snippet =
-             '<p style="color:blue">an html\n' +
+             '<p style="color:red">an html\n' +
              '<em onmouseover="this.textContent=\'PWN3D!\'">click here</em>\n' +
              'snippet</p>';
          }

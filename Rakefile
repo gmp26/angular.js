@@ -86,7 +86,7 @@ task :concat => :init do
                                gen_css('src/bootstrap/google-prettify/prettify.css', true))
 
   concat_module('mgc', [
-      'src/mgc/funcGen.js',
+      'src/mgc/funcGen.js'
       ])
 
 

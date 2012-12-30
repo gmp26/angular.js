@@ -1,20 +1,45 @@
 /**
+ * @ngdoc overview
+ * @name mgc
+ * @description
+ *    Extensions to AngularJS to make a DSL for maths education.
+ */
+
+
+/**
  * @ngdoc service
  * @name mgc.funcGen
  * @function
  *
  * @description
  *   provides some mathematical function generators.
+ *   <ul>
+ *   <li>funcGen.poly(1,2,3) returns f : x -> x^2 + 2x + 3</li>
+ *   <li>funcGen.rational(1,2)(3,4) returns f : x -> (x + 2)/(3x+4)</li>
+ *   <li>var square = funcGen.define('(x) -> x*x')</li>
+ *   <li>funcGen.define('(x,y,z) -> x*y + z') returns f : x,y,z -> x*y + z</li>
+ *   </ul>
+ *
  *
  * @returns {object} Object containing the poly, rational, and define function generators.
  *
  * @example 
- *   funcGen.poly(1,2,3) returns f : x -> x^2 + 2x + 3
- *   funcGen.rational(1,2)(3,4) returns f : x -> (x + 2)/(3x+4)
- *   var square = funcGen.define('(x) -> x*x')
- *   funcGen.define('(x,y,z) -> x*y + z') returns f : x,y,z -> x*y + z
- *
-**/
+   <doc:example module="mgc">
+     <doc:source>
+       <script>
+         angular.module('mgc', ['mgc.services']).controller('Control', 
+           ['$scope','funcGen', function($scope, funcGen) {
+             $scope.f = funcGen.poly(1,2,3)(5);
+         }]);
+       </script>
+       <div ng-controller="Control">
+         <p>if f(x) = x^2 + 2x + 3, then f(5) = {{ f }}</p> 
+       </div>
+     </doc:source>
+
+   </doc:example>
+ */
+
 
 
 //angular.module('mgc', [], function($provide) {
@@ -53,7 +78,7 @@ var funcGen = function() {
 			// returns a function that implements the map. 
 			//
 			define: function(funcdef) {
-				var paramList, funcbody;
+				var paramList, funcBody;
 				var re = /^\s*(\S+)\s*->\s*(.*)\s*$/;
 				var matches = funcdef.match(re);
 				if(matches != null) {
@@ -111,5 +136,5 @@ var funcGen = function() {
 };
 
 // define mgc module and register funcGen service
-angular.module('mgc', []).value('funcGen', funcGen());
+angular.module('mgc.services', []).value('funcGen', funcGen());
 

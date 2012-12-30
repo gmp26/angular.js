@@ -70,7 +70,7 @@ angularFiles = {
     'src/ngSanitize/sanitize.js',
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
-		'src/mgc/funcGen.js',
+    'src/mgc/funcGen.js',
     'src/ngMock/angular-mocks.js',
 
     'src/bootstrap/bootstrap.js'
@@ -111,7 +111,7 @@ angularFiles = {
     'test/ngSanitize/directive/*.js',
     'test/ngSanitize/filter/*.js',
     'test/ngMock/*.js',
-		'test/mgc/funcGenSpec.js'
+		'test/mgc/*.js'
   ],
 
 	
@@ -153,7 +153,7 @@ angularFiles = {
     'src/ngSanitize/sanitize.js',
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
-		'src/mgc/funcGen.js',
+    'src/mgc/funcGen.js',
     'test/matchers.js',
     'test/ngMock/*.js',
     'test/ngCookies/*.js',
@@ -161,7 +161,7 @@ angularFiles = {
     'test/ngSanitize/*.js',
     'test/ngSanitize/directive/*.js',
     'test/ngSanitize/filter/*.js',
-		'test/mgc/funcGenSpec.js'
+    'test/mgc/*.js'
   ],
 
   'jstdPerf': [
