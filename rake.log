@@ -1,0 +1,31 @@
+Generating AngularJS Reference Documentation...
+module = deepLinking deps=angular-sanitize.js
+module = drag deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = directive deps=undefined
+module = undefined deps=undefined
+module = timeExampleModule deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = ngView deps=undefined
+module = undefined deps=undefined
+module = undefined deps=undefined
+module = ngView deps=undefined
+module = customControl deps=undefined
+DONE. Generated 211 pages in 5747ms.
+Generating AngularJS Reference Documentation...
+Generating AngularJS Reference Documentation...
+DONE. Generated 211 pages in 5735ms.
+Generating AngularJS Reference Documentation...
+DONE. Generated 211 pages in 5858ms.

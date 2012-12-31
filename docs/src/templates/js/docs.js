@@ -170,7 +170,7 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
     var indexHtmlContent = '<!doctype html>\n' +
         '<html ng-app{{mod}}>\n' +
         '  <head>\n' +
-        '    <script src="{{angularJSUrl}}"></script>\n' +
+//        '    <script src="{{angularJSUrl}}"></script>\n' +
         '{{scriptDeps}}\n' +
         '  </head>\n' +
         '  <body>\n\n' +
@@ -179,13 +179,18 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
         '</html>\n';
     var scriptDeps = '';
     angular.forEach(content.deps, function(file) {
-      if (file.name !== 'angular.js') {
-        scriptDeps += '    <script src="' + angularUrls[file.name] + '"></script>\n'
+      if (file.name /*&& file.name !== 'angular.js'*/) {
+				if(angularUrls[file.name]) {
+          scriptDeps += '<script src="' + angularUrls[file.name] + '"></script>\n';
+				}
+				else {
+          scriptDeps += '<script src="' + file.name + '"></script>\n';					
+				}
       }
     });
     indexProp = {
       mod: mod,
-      angularJSUrl: angularUrls['angular.js'],
+//      angularJSUrl: angularUrls['angular.js'],
       scriptDeps: scriptDeps,
       indexContents: content.html[0].content
     };
@@ -201,6 +206,8 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
     
     postData.private = true;
     postData.description = 'AngularJS Example Plunkr';
+
+		//console.log("plunkr postData\n" + postData);
 
     formPostData('http://plnkr.co/edit/?p=preview', postData);
   };
@@ -229,10 +236,12 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
 //		  prop.head += templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular-mgc.js']});
 
     angular.forEach(content.deps, function(file) {
-      if (file.name !== 'angular.js') {
-        prop.head += '    <script src="' + angularUrls[file.name] + '"></script>\n'
+      if (file.name !== 'angular.js' && angularUrls[file.name]) {
+        prop.head += '<script src="' + angularUrls[file.name] + '"></script>\n'
       }
     });
+
+		//console.log("prop.head = "+prop.head);
 
     angular.forEach(content.html, function(file, index) {
       if (index) {
@@ -242,9 +251,13 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
       }
     });
 
+		//console.log("prop.html = "+prop.html);
+
     angular.forEach(content.js, function(file, index) {
       prop.script += file.content;
     });
+
+		//console.log("prop.script = "+prop.script);
 
     angular.forEach(content.css, function(file, index) {
       prop.css += file.content;
