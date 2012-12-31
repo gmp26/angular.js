@@ -162,7 +162,11 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
   return function(content) {
     var allFiles = [].concat(content.js, content.css, content.html);
 		var mod = "";
-		if(content.module && content.module !== "") mod = '="'+content.module+'"';
+		var scripts = "";
+		if(content.module && content.module !== "") {
+			mod = '="'+content.module+'"';
+		}
+		
     var indexHtmlContent = '<!doctype html>\n' +
         '<html ng-app{{mod}}>\n' +
         '  <head>\n' +
@@ -176,7 +180,7 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
     var scriptDeps = '';
     angular.forEach(content.deps, function(file) {
       if (file.name !== 'angular.js') {
-        scriptDeps += '    <script src="' + file.name + '"></script>\n'
+        scriptDeps += '    <script src="' + angularUrls[file.name] + '"></script>\n'
       }
     });
     indexProp = {
@@ -220,11 +224,8 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
 
 
     prop.head = templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular.js']});
-    angular.forEach(content.deps, function(file) {
-      if (file.name !== 'angular.js') {
-        prop.head += '    <script src="' + file.name + '"></script>\n'
-      }
-    });
+		if(content.module === 'mgc')
+		  prop.head += templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular-mgc.js']});
 
     angular.forEach(content.html, function(file, index) {
       if (index) {

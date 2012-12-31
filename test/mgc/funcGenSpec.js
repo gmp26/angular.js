@@ -2,7 +2,7 @@
 
 describe('funcGenSpec', function() {
 
-    beforeEach(module('mgc'));
+    beforeEach(module('mgc.services'));
 
     var fg;
 

@@ -87,14 +87,14 @@
 
        it('should escape snippet without any filter', function() {
          expect(using('#escaped-html').element('div').html()).
-           toBe("&lt;p style=\"color:blue\"&gt;an html\n" +
+           toBe("&lt;p style=\"color:red\"&gt;an html\n" +
                 "&lt;em onmouseover=\"this.textContent='PWN3D!'\"&gt;click here&lt;/em&gt;\n" +
                 "snippet&lt;/p&gt;");
        });
 
        it('should inline raw snippet if filtered as unsafe', function() {
          expect(using('#html-unsafe-filter').element("div").html()).
-           toBe("<p style=\"color:blue\">an html\n" +
+           toBe("<p style=\"color:red\">an html\n" +
                 "<em onmouseover=\"this.textContent='PWN3D!'\">click here</em>\n" +
                 "snippet</p>");
        });
