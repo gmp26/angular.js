@@ -224,8 +224,15 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
 
 
     prop.head = templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular.js']});
-		if(content.module === 'mgc')
-		  prop.head += templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular-mgc.js']});
+
+//		if(content.module === 'mgc')
+//		  prop.head += templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular-mgc.js']});
+
+    angular.forEach(content.deps, function(file) {
+      if (file.name !== 'angular.js') {
+        prop.head += '    <script src="' + angularUrls[file.name] + '"></script>\n'
+      }
+    });
 
     angular.forEach(content.html, function(file, index) {
       if (index) {
