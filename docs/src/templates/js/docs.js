@@ -32,7 +32,7 @@ docsApp.directive.sourceEdit = function(getEmbeddedTemplate) {
   return {
     template: '<div class="btn-group pull-right">' +
         '<a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href>' +
-        '  <i class="icon-pencil icon-white"></i> Edit<span class="caret"></span>' +
+        '  <i class="icon-pencil icon-white"></i> Edit <span class="caret"></span>' +
         '</a>' +
         '<ul class="dropdown-menu">' +
         '  <li><a ng-click="plunkr($event)" href="">In Plunkr</a></li>' +
@@ -161,8 +161,10 @@ docsApp.serviceFactory.formPostData = function($document) {
 docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angularUrls) {
   return function(content) {
     var allFiles = [].concat(content.js, content.css, content.html);
+		var mod = "";
+		if(content.module && content.module !== "") mod = '="'+content.module+'"';
     var indexHtmlContent = '<!doctype html>\n' +
-        '<html ng-app>\n' +
+        '<html ng-app{{mod}}>\n' +
         '  <head>\n' +
         '    <script src="{{angularJSUrl}}"></script>\n' +
         '{{scriptDeps}}\n' +
@@ -178,6 +180,7 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
       }
     });
     indexProp = {
+      mod: mod,
       angularJSUrl: angularUrls['angular.js'],
       scriptDeps: scriptDeps,
       indexContents: content.html[0].content
@@ -215,7 +218,13 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
           script: ''
         };
 
+
     prop.head = templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular.js']});
+    angular.forEach(content.deps, function(file) {
+      if (file.name !== 'angular.js') {
+        prop.head += '    <script src="' + file.name + '"></script>\n'
+      }
+    });
 
     angular.forEach(content.html, function(file, index) {
       if (index) {
