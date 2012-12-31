@@ -16,7 +16,7 @@ function ids(list) {
 
 exports.Example = function(scenarios) {
   this.module = '';
-  this.deps = ['angular.js'];
+  this.deps = ['angular.js', 'http://localhost:8000/build/angular-mgc.js'];
   this.html = [];
   this.css = [];
   this.js = [];
