@@ -71,6 +71,7 @@ angularFiles = {
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
     'src/mgc/funcGen.js',
+    'src/mgc/directive/mgcEval.js',
     'src/ngMock/angular-mocks.js',
 
     'src/bootstrap/bootstrap.js'
@@ -154,6 +155,7 @@ angularFiles = {
     'src/ngSanitize/directive/ngBindHtml.js',
     'src/ngSanitize/filter/linky.js',
     'src/mgc/funcGen.js',
+    'src/mgc/directive/mgcEval.js',
     'test/matchers.js',
     'test/ngMock/*.js',
     'test/ngCookies/*.js',

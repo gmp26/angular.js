@@ -86,9 +86,8 @@ task :concat => :init do
                                gen_css('src/bootstrap/google-prettify/prettify.css', true))
 
   concat_module('mgc', [
-      'src/mgc/funcGen.js'
-      ])
-
+      'src/mgc/directive/mgcEval.js',
+      'src/mgc/funcGen.js'])
 
   FileUtils.cp 'src/ngMock/angular-mocks.js', path_to('angular-mocks.js')
 
