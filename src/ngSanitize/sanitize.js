@@ -39,7 +39,7 @@
  * @returns {string} Sanitized html.
  *
  * @example
-   <doc:example>
+   <doc:example module="ngSanitize">
      <doc:source>
        <script>
          function Ctrl($scope) {

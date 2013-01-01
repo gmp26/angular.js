@@ -28,10 +28,6 @@ exports.Example = function(scenarios) {
 exports.Example.prototype.setModule = function(module) {
   if (module) {
     this.module = module;
-		if(module == 'mgc') {
-			//this.deps.push('http://localhost:8000/build/angular-mgc.js');
-			this.deps.push('angular-mgc.js');
-		}
   }
 };
 
