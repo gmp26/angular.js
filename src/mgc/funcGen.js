@@ -41,10 +41,6 @@
  */
 
 
-
-//angular.module('mgc', [], function($provide) {
-//    $provide.factory('funcGen', function() {
-
 var funcGen = function() {
 
 			var poly = function() {
