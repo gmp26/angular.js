@@ -27,16 +27,14 @@
    <doc:example module="mgc">
      <doc:source>
        <script>
-         angular.module('mgc', ['mgc.services']).controller('Control', 
-           ['$scope','funcGen', function($scope, funcGen) {
+         function Ctrl($scope, funcGen) { 
              $scope.f = funcGen.poly(1,2,3)(5);
-         }]);
+         };
        </script>
-       <div ng-controller="Control">
-         <p>if f(x) = x^2 + 2x + 3, then f(5) = {{ f }}</p> 
+       <div ng-controller="Ctrl">
+         <p>if f(x) = x^2 + 2*x + 3, then f(5) = {{ f }}</p> 
        </div>
      </doc:source>
-
    </doc:example>
  */
 
@@ -136,5 +134,4 @@ var funcGen = function() {
 };
 
 // define mgc module and register funcGen service
-angular.module('mgc.services', []).value('funcGen', funcGen());
-
+angular.module('mgc', []).value('funcGen', funcGen);

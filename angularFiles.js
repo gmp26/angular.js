@@ -111,8 +111,8 @@ angularFiles = {
     'test/ngSanitize/*.js',
     'test/ngSanitize/directive/*.js',
     'test/ngSanitize/filter/*.js',
-    'test/ngMock/*.js',
-		'test/mgc/*.js'
+    'test/mgc/*.js',
+    'test/ngMock/*.js'
   ],
 
 	
