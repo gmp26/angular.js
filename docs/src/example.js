@@ -16,7 +16,7 @@ function ids(list) {
 
 exports.Example = function(scenarios) {
   this.module = '';
-  this.deps = ['angular.js', 'http://localhost:8000/build/angular-mgc.js'];
+  this.deps = ['angular.js'/*, 'angular-mgc.js'*/];
   this.html = [];
   this.css = [];
   this.js = [];
@@ -28,6 +28,12 @@ exports.Example = function(scenarios) {
 exports.Example.prototype.setModule = function(module) {
   if (module) {
     this.module = module;
+    if(module === 'mgc') {
+      this.deps.push('angular-mgc.js');
+    }
+    else if(module === 'ngSanitize') {
+      this.deps.push('angular-sanitize.js');
+    }
   }
 };
 
@@ -35,6 +41,7 @@ exports.Example.prototype.addDeps = function(deps) {
   deps && deps.split(/[\s\,]/).forEach(function(dep) {
     if (dep) {
       this.deps.push(dep);
+      console.log("deps = "+dep);
     }
   }, this);
 };

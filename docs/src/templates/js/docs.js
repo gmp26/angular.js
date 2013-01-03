@@ -139,9 +139,9 @@ docsApp.serviceFactory.angularUrls = function($document) {
       urls[match[1].replace(/(\-\d.*)?(\.min)?\.js$/, '.js')] = match[0];
     }
   });
-
+  angular.forEach(urls, function(val,key) {console.log("urls["+key+"]="+val);});
   return urls;
-}
+};
 
 
 docsApp.serviceFactory.formPostData = function($document) {
@@ -176,7 +176,13 @@ docsApp.serviceFactory.openPlunkr = function(templateMerge, formPostData, angula
     var scriptDeps = '';
     angular.forEach(content.deps, function(file) {
       if (file.name !== 'angular.js') {
-        scriptDeps += '    <script src="' + file.name + '"></script>\n'
+        if(angularUrls[file.name]) {
+          scriptDeps += templateMerge('<script src="{{url}}"></script>\n', 
+            {url: angularUrls[file.name].replace(/.min/,'')});
+        }
+        else {
+          scriptDeps += '    <script src="' + file.name + '"></script>\n';
+        }
       }
     });
     indexProp = {
@@ -219,10 +225,13 @@ docsApp.serviceFactory.openJsFiddle = function(templateMerge, formPostData, angu
         };
 
 
-    prop.head = templateMerge('<script src="{{url}}"></script>', {url: angularUrls['angular.js']});
+    prop.head = templateMerge('<script src="{{url}}"></script>\n', {url: angularUrls['angular.js']});
     angular.forEach(content.deps, function(file) {
       if (file.name !== 'angular.js') {
-        prop.head += '    <script src="' + file.name + '"></script>\n'
+        if(angularUrls[file.name]) {
+          prop.head += templateMerge('<script src="{{url}}"></script>\n', 
+            {url: angularUrls[file.name].replace(/.min/,'')});
+        }
       }
     });
 

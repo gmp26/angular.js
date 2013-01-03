@@ -26,11 +26,11 @@
      </script>
      <div ng-controller="Ctrl">
      <p> 
-        If <i>x</i> is <input type="number" min="-10" max="10" ng-model="x"><br/>
+        If <i>x</i> is <input type="number" min="-10" max="10" ng-model="x">
         then <i>x</i><sup>2</sup> is: <span class="mgc-eval" f="x->x*x" sigfigs="3"> </span><br/>
      </p>
      <p> 
-        If <i>y</i> is <input type="number" min="-10" max="10" ng-model="y"><br/>
+        If <i>y</i> is <input type="number" min="-10" max="10" ng-model="y">
         then <i>xy</i> is: <span class="mgc-eval" f="(x,y)->x*y" sigfigs="3"> </span><br/>
      </p>
     

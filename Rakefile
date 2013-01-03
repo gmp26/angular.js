@@ -125,7 +125,7 @@ end
 
 desc 'Generate docs'
 task :docs => [:init] do
-  `node docs/src/gen-docs.js`
+  `node docs/src/gen-docs.js >foo.log`
 
   [ path_to('docs/.htaccess'),
     path_to('docs/index.html'),
