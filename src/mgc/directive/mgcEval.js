@@ -36,6 +36,18 @@
     
      </div>
      </doc:source>
+     <doc:scenario>
+       it('should evaluate functions of x and (x,y)', function() {
+         expect(element('.doc-example-live span:first').html()).toEqual("0.00");
+         expect(element('.doc-example-live span:last').html()).toEqual("0.00");
+
+         input('x').enter(2);
+         input('y').enter(5);
+
+         expect(element('.doc-example-live span:first').html()).toEqual("4.00");
+         expect(element('.doc-example-live span:last').html()).toEqual("10.0");
+       });
+     </doc:scenario>
    </doc:example>
    */
   angular.module('mgc').directive('mgcEval', ['$funcGen', function($funcGen) {
