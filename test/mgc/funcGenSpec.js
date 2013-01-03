@@ -1,26 +1,17 @@
 'use strict';
 
+/*global jasmine,describe,xdescribe,iit,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
+/*global angular,module,inject */
+
 describe('funcGenSpec', function() {
 
-  var fg = funcGen();
+  var fg; // = funcGen();
 
   beforeEach(module('mgc'));
 
-/*
-  beforeEach(function() {
-    inject(function($injector) {
-      fg = $injector.get('funcGen');
-    });
-  });
-   
-  iit('should funcGen should be injectable', inject(function(funcGen) {
-    expect(funcGen).toBeDefined();
-  }));
-
-  beforeEach(inject(function(funcGen) {
+  beforeEach(inject(['$funcGen', function(funcGen) {
     fg = funcGen;
-  }));
-*/
+  }]));
 
   it('should make polynomials', function() {
     expect(fg.poly(1,2,3)(1)).toBe(6);
@@ -47,13 +38,6 @@ describe('funcGenSpec', function() {
     expect(fg.rational(3,2)(2,3)(4)).toBe((3*4+2)/(2*4+3));
     expect(fg.rational(3,2)(2,3)(1)).toBe((3*1+2)/(2*1+3));
   });
-
-  xit('could make chainable functions', function() {
-      // but it doesn't!
-      console.log(typeof(Math.sin));
-      var f = fg.poly(Math.sin); 
-      expect(f(0)(Math.PI/2)).toBe(1);
-    });
 
   it('should create functions from js definitions', function() {
     expect(fg.define('x,y -> x*y')(3,4)).toBe(12);

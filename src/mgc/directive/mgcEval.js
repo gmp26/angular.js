@@ -13,7 +13,7 @@
  *
  * @element ANY
  * @example
-   <doc:example module="mgc">
+   <doc:example>
      <doc:source>
      <script>
        function Ctrl($scope) { 
@@ -27,7 +27,7 @@
      </doc:source>
    </doc:example>
   */
-angular.module('mgc', []).directive('mgcEval', ['funcGen', function(funcGen) {
+  angular.module('mgc').directive('mgcEval', ['funcGen', function(funcGen) {
 	var fg = funcGen;
 
   return {

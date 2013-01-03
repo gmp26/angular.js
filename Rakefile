@@ -78,6 +78,11 @@ task :concat => :init do
       'src/ngSanitize/directive/ngBindHtml.js',
       'src/ngSanitize/filter/linky.js'])
 
+  concat_module('mgc', [
+      'src/mgc/funcGen.js',
+      'src/mgc/directive/mgcEval.js'
+      ])
+  
   concat_module('resource', ['src/ngResource/resource.js'])
   concat_module('cookies', ['src/ngCookies/cookies.js'])
   concat_module('bootstrap', ['src/bootstrap/bootstrap.js'])
@@ -85,10 +90,6 @@ task :concat => :init do
                                        'src/bootstrap/google-prettify/prettify.js'],
                                gen_css('src/bootstrap/google-prettify/prettify.css', true))
 
-  concat_module('mgc', [
-      'src/mgc/funcGen.js',
-      'src/mgc/directive/mgcEval.js'
-      ])
 
   FileUtils.cp 'src/ngMock/angular-mocks.js', path_to('angular-mocks.js')
 

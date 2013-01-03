@@ -163,6 +163,7 @@ angularFiles = {
     'test/ngSanitize/*.js',
     'test/ngSanitize/directive/*.js',
     'test/ngSanitize/filter/*.js',
+    'test/ngSanitize/*.js',
     'test/mgc/*.js'
   ],
 
@@ -203,6 +204,7 @@ angularFiles = {
     'src/ngScenario/angular-bootstrap.js',
     'test/jquery_remove.js'
   ]
+
 };
 
 if (exports) {
