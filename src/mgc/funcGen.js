@@ -27,7 +27,7 @@
    <doc:example module="mgc">
      <doc:source>
        <script>
-         function Ctrl($scope, $funcGen) {
+          function Ctrl($scope, $funcGen) {
              $scope.f = $funcGen.poly(1,2,3)(5);
          };
        </script>
@@ -84,7 +84,7 @@ var funcGen = function() {
 				//console.log("matches = "+matches);
 				paramList = matches[1];
 				if(paramList[0] === '(') paramList=paramList.slice(1,-1);
-				//console.log('funcdef='+funcdef);
+				//console.log('paramList='+paramList.toString());
 				funcBody = matches[2];
 				//console.log("funcBody1="+funcBody);
 									
@@ -120,12 +120,13 @@ var funcGen = function() {
 			}
 			if(paramList && funcBody && paramList.length > 0 && funcBody.length > 0) {
 				var f = new Function(paramList, "return "+funcBody+";");
+				//console.log("defined: f="+f.toString());
 				var rf = function() {
-					//var args = Array.prototype.slice.call(arguments);
-					return f.apply(this, arguments); 
+					var args = Array.prototype.slice.call(arguments);
+					return f.apply(this, args); 
 				};
-				rf.p = paramList; 
-				rf.f = funcBody;
+				rf.params = paramList.split(/\s*,\s*/);
+				rf.body = funcBody;
 				return rf;
 			}
 			
