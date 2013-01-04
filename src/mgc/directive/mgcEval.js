@@ -47,7 +47,7 @@
      <dt>Use Math.sin</dt>
      <dl>
         Standard Math functions can be used without the Math prefix.
-        e.g. sin(PI<i>x</i>/10) is 
+        e.g. sin(π<i>x</i>/10) is 
         <span id="mgcEval2" class="mgc-eval" f="(x)->sin(PI*x/10)" fixed="2"> </span>
      </dl>
      <dt>Use a function of 2 variables</dt>
