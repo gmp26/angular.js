@@ -53,39 +53,39 @@ describe('funcGenSpec', function() {
 
   it('should insert \'Math.\' before maths functions', function() {
     var rf = fg.define('x -> sin(x)*cos(x)');
-    expect(rf.f.toString()).toBe('Math.sin(x)*Math.cos(x)');
+    expect(rf.body.toString()).toBe('Math.sin(x)*Math.cos(x)');
   });
 
   it('should replace repeated functions and PI', function() {
     var rf = fg.define('x -> sin(x)*sin(PI)');
-    expect(rf.f.toString()).toBe('Math.sin(x)*Math.sin(Math.PI)');
+    expect(rf.body.toString()).toBe('Math.sin(x)*Math.sin(Math.PI)');
   });
 
   it('should cover these Math functions', function() {
-    expect(fg.define('x -> asin(x)').f).toBe('Math.asin(x)');
-    expect(fg.define('x -> acos(x)').f).toBe('Math.acos(x)');
-    expect(fg.define('x -> atan(x)').f).toBe('Math.atan(x)');
-    expect(fg.define('x -> sin(x)').f).toBe('Math.sin(x)');
-    expect(fg.define('x -> cos(x)').f).toBe('Math.cos(x)');
-    expect(fg.define('x -> tan(x)').f).toBe('Math.tan(x)');
-    expect(fg.define('x -> sinh(x)').f).toBe('Math.sinh(x)');
-    expect(fg.define('x -> cosh(x)').f).toBe('Math.cosh(x)');
-    expect(fg.define('x -> tanh(x)').f).toBe('Math.tanh(x)');
-    expect(fg.define('x -> exp(x)').f).toBe('Math.exp(x)');
-    expect(fg.define('x -> log(x)').f).toBe('Math.log(x)');
-    expect(fg.define('x -> ceil(x)').f).toBe('Math.ceil(x)');
-    expect(fg.define('x -> floor(x)').f).toBe('Math.floor(x)');
-    expect(fg.define('x -> round(x)').f).toBe('Math.round(x)');
-    expect(fg.define('x -> sqrt(x)').f).toBe('Math.sqrt(x)');
-    expect(fg.define('x -> abs(x)').f).toBe('Math.abs(x)');
-    expect(fg.define('x -> atan2(x)').f).toBe('Math.atan2(x)');
-    expect(fg.define('x -> PI').f).toBe('Math.PI');
-    expect(fg.define('x -> LN2').f).toBe('Math.LN2');
-    expect(fg.define('x -> LN10').f).toBe('Math.LN10');
-    expect(fg.define('x -> LOG2E').f).toBe('Math.LOG2E');
-    expect(fg.define('x -> LOG10E').f).toBe('Math.LOG10E');
-    expect(fg.define('x -> SQRT1_2').f).toBe('Math.SQRT1_2');
-    expect(fg.define('x -> SQRT2').f).toBe('Math.SQRT2');
+    expect(fg.define('x -> asin(x)').body).toBe('Math.asin(x)');
+    expect(fg.define('x -> acos(x)').body).toBe('Math.acos(x)');
+    expect(fg.define('x -> atan(x)').body).toBe('Math.atan(x)');
+    expect(fg.define('x -> sin(x)').body).toBe('Math.sin(x)');
+    expect(fg.define('x -> cos(x)').body).toBe('Math.cos(x)');
+    expect(fg.define('x -> tan(x)').body).toBe('Math.tan(x)');
+    expect(fg.define('x -> sinh(x)').body).toBe('Math.sinh(x)');
+    expect(fg.define('x -> cosh(x)').body).toBe('Math.cosh(x)');
+    expect(fg.define('x -> tanh(x)').body).toBe('Math.tanh(x)');
+    expect(fg.define('x -> exp(x)').body).toBe('Math.exp(x)');
+    expect(fg.define('x -> log(x)').body).toBe('Math.log(x)');
+    expect(fg.define('x -> ceil(x)').body).toBe('Math.ceil(x)');
+    expect(fg.define('x -> floor(x)').body).toBe('Math.floor(x)');
+    expect(fg.define('x -> round(x)').body).toBe('Math.round(x)');
+    expect(fg.define('x -> sqrt(x)').body).toBe('Math.sqrt(x)');
+    expect(fg.define('x -> abs(x)').body).toBe('Math.abs(x)');
+    expect(fg.define('x -> atan2(x)').body).toBe('Math.atan2(x)');
+    expect(fg.define('x -> PI').body).toBe('Math.PI');
+    expect(fg.define('x -> LN2').body).toBe('Math.LN2');
+    expect(fg.define('x -> LN10').body).toBe('Math.LN10');
+    expect(fg.define('x -> LOG2E').body).toBe('Math.LOG2E');
+    expect(fg.define('x -> LOG10E').body).toBe('Math.LOG10E');
+    expect(fg.define('x -> SQRT1_2').body).toBe('Math.SQRT1_2');
+    expect(fg.define('x -> SQRT2').body).toBe('Math.SQRT2');
   });
 
 });

@@ -139,7 +139,7 @@ docsApp.serviceFactory.angularUrls = function($document) {
       urls[match[1].replace(/(\-\d.*)?(\.min)?\.js$/, '.js')] = match[0];
     }
   });
-  angular.forEach(urls, function(val,key) {console.log("urls["+key+"]="+val);});
+  // angular.forEach(urls, function(val,key) {console.log("urls["+key+"]="+val);});
   return urls;
 };
 
@@ -527,7 +527,7 @@ docsApp.controller.DocsController = function($scope, $location, $window, $cookie
           },
           types: [],
           filters: []
-        }
+        };
         modules.push(module);
       }
       return module;

@@ -29,7 +29,7 @@
        <script>
           function Ctrl($scope, $funcGen) {
              $scope.f = $funcGen.poly(1,2,3)(5);
-         };
+          };
        </script>
        <div ng-controller="Ctrl">
          <p>if f(x) = x^2 + 2*x + 3, then f(5) = {{ f }}</p> 
