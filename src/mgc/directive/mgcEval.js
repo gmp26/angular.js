@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * @ngdoc directive
@@ -77,7 +77,7 @@
    */
   angular.module('mgc').directive('mgcEval', ['$funcGen', function($funcGen) {
     var fg = $funcGen;
-    // console.log("mgcEval defined");
+
     return {
       restrict: 'C', // 
       scope: true,	
@@ -89,15 +89,12 @@
         if(attrs.fname) {
           scope.$parent[attrs.fname] = f;
         }
-        attrs.sigfigs = attrs.sigfigs | 3;
-
-        // console.log("mgcEval: " + element.html());
 
         scope.$watch(function (scope) {
-          // console.log("$watch x1: "+scope.x+" newval="+newVal +" oldVal="+oldVal);
+
           // collect arguments to f from the scope
-          //console.log("watch params = "+f.params + " type:"+typeof f.params);
           var args = f.params.map(function(p) {return scope[p];});
+
           // There may be functions defined on the parent scope
           var result = f.apply(scope.$parent, args);
 

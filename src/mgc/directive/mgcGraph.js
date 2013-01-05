@@ -1,0 +1,48 @@
+/**
+ * @ngdoc directive
+ * @name mgc.directive:mgcSpace
+ *
+ * @description
+ *  Create a rectangular space for vector graphics
+ *
+ * @element ANY
+ * @example
+   <doc:example module="mgc">
+
+     <doc:source>
+       <script>
+         function Ctrl($scope) {
+           $scope.sw = 300;
+           $scope.sh = 200;
+         };
+       </script>
+       <div ng-controller="Ctrl">
+         <dl>
+           <dt>Make a space for vector graphics</dt>
+             <dd> 
+              Set the width: <input type="number" min="100" max="600" value="300" ng-model="sw"><br />
+              Set the height: <input type="number" min="100" max="600" value="200" ng-model="sh"><br />
+              <mgc-space>
+             </dd>
+           </dt>
+         </dl>   
+       </div>
+     </doc:source>
+
+     <doc:scenario>
+       it('should evaluate functions of x and (x,y)', function() {
+         expect(element('mgc-space').width()).toEqual(300);
+         expect(element('mgc-space').height()).toEqual(200);
+       });
+     </doc:scenario>
+   </doc:example>
+   */
+var mgc = angular.module('mgc');
+
+mgc.directive('mgcSpace', function() {
+  return {
+    restrict: 'EA',
+    template: '<div style="width:{{sw}}px; height:{{sh}}px; border:1px solid black"></div>',
+    replace: true
+  };
+})
