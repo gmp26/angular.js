@@ -35,6 +35,7 @@
        .space {
          width: 500px;
          background-color: #fffffb;
+         overflow: hidden;
        }
        .over {
          border:1px solid red;
@@ -105,7 +106,7 @@
        </style>
      <div mgc-cuisenaire ng-controller="RodCtrl" class="space">
        <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
-         <div mgc-rod="{{rod}}" class="rod n{{rod.number}}" draggable="true">
+         <div mgc-rod foo="{{$index}}" goo="1" class="rod n{{rod.number}}" draggable="true">
        </div>
      </div>
      </file>
@@ -122,7 +123,6 @@ angular.module('mgc')
 
         element.bind("drop", function(e) {
           if (e.stopPropagation) e.stopPropagation();
-          console.log("DROPPED");
           return false; 
         });
 
@@ -147,30 +147,17 @@ angular.module('mgc')
   return {
     restrict: 'A',
     scope: false,
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       
       var rod = scope.rod;
       var el = element;
-/*
-      element.bind("mousedown", function(e) {
-        rod.dragStartX = e.pageX;
-        rod.dragStartY = e.pageY;
-        rod.dragging = true;
-      });
+      console.log("attrs.foo="+scope.$eval('attrs.foo'));
+      console.log("scope.foo="+scope.foo);
+      console.log("attrs.goo="+attrs.goo);
 
-      element.bind("mousemove", function(e) {
-        if(rod.dragging) {
-          element.css("left", ""+e.pageX+"px");
-          element.css("top", ""+e.pageY+"px");
-        }
-      });
-
-      element.bind("mouseup", function(e) {
-        rod.dragging = false;
-      });
-*/
       element.bind("dragstart", function(e) {
         this.style.opacity = '0.5';
+        scope.dragSource = element;
       });
 
       element.bind("click", function(e) {
@@ -181,8 +168,11 @@ angular.module('mgc')
           element.addClass("rotated");
       });
 
-      //$watch('rod.number, function())
       console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
+
+      scope.$watch(attrs.mgcRod, function(newVal, oldVal) {
+        console.log("foo = "+newVal);
+      });
     }
   };
 });
