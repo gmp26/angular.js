@@ -32,13 +32,34 @@
      </file>
      <file name="index.html">
      <style>
+       .space {
+         width: 500px;
+         background-color: #fffffb;
+       }
+       .over {
+         border:1px solid red;
+       }
        .rod {
          height: 30px;
          border: 2px solid #888;
          -webkit-border-radius: 3px;
          -moz-border-radius: 3px;
          -ms-border-radius: 3px;
-         border-radius: 3px;  
+         border-radius: 3px;
+         position:relative;
+
+         transition: -transform 0.25s;
+         -moz-transition: -moz-transform 0.25s;
+         -webkit-transition: -webkit-transform 0.25s;
+         -o-transition: -o-transform 0.25s;
+
+         transform: rotate(45deg);
+         -webkit-transform-origin:0% 0%; 
+
+         cursor: move;
+       }
+       .rotated {
+         -webkit-transform: rotate(90deg);
        }
        .n1 {
          width: 30px;
@@ -80,11 +101,12 @@
          width: 300px;
          background-color: #ff4b00;
        }       
+
        </style>
-     <div ng-controller="RodCtrl" >
-       <!--<div ng-repeat="rod in rods">-->
-         <mgc-rod ng-repeat="rod in rods" class="rod n{{rod.number}}" rod="{{rod.number}}" x="{{rod.x}}" y="{{rod.y}}">
-       <!--</div>-->
+     <div mgc-cuisenaire ng-controller="RodCtrl" class="space">
+       <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
+         <div mgc-rod="{{rod}}" class="rod n{{rod.number}}" draggable="true">
+       </div>
      </div>
      </file>
      <file name="scenario.js">
@@ -93,26 +115,74 @@
      </file>
    </example>
    **/
-angular.module('mgc').directive('mgcRod', function() {
+angular.module('mgc')
+  .directive('mgcCuisenaire', function() {
+    return {
+      link: function(scope, element, attrs) {
+
+        element.bind("drop", function(e) {
+          if (e.stopPropagation) e.stopPropagation();
+          console.log("DROPPED");
+          return false; 
+        });
+
+        element.bind('dragover', function (e) {
+          if (e.preventDefault) e.preventDefault(); // allows us to drop
+          element.addClass('over');
+          //e.dataTransfer.dropEffect = 'copy';
+          return false;
+        });
+
+        // to get IE to work
+        element.bind('dragenter', function (e) {
+          element.addClass('over');
+          return false;
+        });
+
+      }
+    }; 
+  })
+  .directive('mgcRod', function() {
 
   return {
-    restrict: 'E', // 
-    compile: function(element, attrs) {
-      var rod = attrs.rod;
-      var x = attrs.x;
-      var y = attrs.y;
-      var htmlText = '<div class="rod n'+rod+'"></div>';
-      element.replaceWith(htmlText);
-    }
-    
-    /*
-    template: '<div class="rod1 horizontal"></div>',
-    replace: true,
+    restrict: 'A',
+    scope: false,
     link: function (scope, element, attrs) {
-      console.log("scope = "+scope);
-      console.log("element = "+element);
-      console.log("attrs = "+attrs);
+      
+      var rod = scope.rod;
+      var el = element;
+/*
+      element.bind("mousedown", function(e) {
+        rod.dragStartX = e.pageX;
+        rod.dragStartY = e.pageY;
+        rod.dragging = true;
+      });
+
+      element.bind("mousemove", function(e) {
+        if(rod.dragging) {
+          element.css("left", ""+e.pageX+"px");
+          element.css("top", ""+e.pageY+"px");
+        }
+      });
+
+      element.bind("mouseup", function(e) {
+        rod.dragging = false;
+      });
+*/
+      element.bind("dragstart", function(e) {
+        this.style.opacity = '0.5';
+      });
+
+      element.bind("click", function(e) {
+        console.log("click @"+e.pageX + "," + e.pageY);
+        if(element.hasClass("rotated"))
+          element.removeClass("rotated");
+        else 
+          element.addClass("rotated");
+      });
+
+      //$watch('rod.number, function())
+      console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
     }
-    */
   };
 });
