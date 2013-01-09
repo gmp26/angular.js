@@ -15,6 +15,7 @@
            // Variables defined within this scope may be used to evaluate functions
            // defined within the same scope. So here, we can define functions of
            // x, of y, or of (x,y).
+           $scope.number = 5;
            $scope.rodUnit = 30; // pixels
            $scope.rods = [
              {number: 1, horizontal:true, x:0, y:0},
@@ -33,7 +34,6 @@
      <file name="index.html">
      <style>
        .space {
-         width: 500px;
          background-color: #fffffb;
          overflow: hidden;
        }
@@ -104,11 +104,17 @@
        }       
 
        </style>
-     <div mgc-cuisenaire ng-controller="RodCtrl" class="space">
-       <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
-         <div mgc-rod foo="{{$index}}" goo="1" class="rod n{{rod.number}}" draggable="true">
+       <div ng-controller="RodCtrl">
+         <div class="well">
+           <div>Drag out a new <input style="width:80px" type="number" ng-model="number" min="1" max="10" ng-value="5"> rod</div>
+           <div mgc-rod-factory="{{number}}"></div>
+         </div>
+         <div mgc-cuisenaire-board class="well space">
+           <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
+           <div mgc-rod="{{$index}}" class="rod n{{rod.number}}" draggable="true">
+         </div>
        </div>
-     </div>
+
      </file>
      <file name="scenario.js">
        it('should display a stack of rods', function() {
@@ -117,7 +123,18 @@
    </example>
    **/
 angular.module('mgc')
-  .directive('mgcCuisenaire', function() {
+  .directive('mgcRodFactory', function() {
+    return {
+      link: function(scope, element, attrs) {
+        attrs.$observe('mgcRodFactory', function(number) {
+          element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
+          element.addClass("rod");
+          element.addClass("n"+number);
+        });
+      }
+    };
+  })
+  .directive('mgcCuisenaireBoard', function() {
     return {
       link: function(scope, element, attrs) {
 
@@ -151,9 +168,6 @@ angular.module('mgc')
       
       var rod = scope.rod;
       var el = element;
-      console.log("attrs.foo="+scope.$eval('attrs.foo'));
-      console.log("scope.foo="+scope.foo);
-      console.log("attrs.goo="+attrs.goo);
 
       element.bind("dragstart", function(e) {
         this.style.opacity = '0.5';
@@ -170,9 +184,10 @@ angular.module('mgc')
 
       console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
 
-      scope.$watch(attrs.mgcRod, function(newVal, oldVal) {
-        console.log("foo = "+newVal);
+      attrs.$observe('mgcRod', function(value) {
+        console.log('mgcRod = '+value);
       });
+
     }
   };
 });
