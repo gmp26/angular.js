@@ -15,6 +15,7 @@
            // Variables defined within this scope may be used to evaluate functions
            // defined within the same scope. So here, we can define functions of
            // x, of y, or of (x,y).
+           $scope.number = 5;
            $scope.rodUnit = 30; // pixels
            $scope.rods = [
              {number: 1, horizontal:true, x:0, y:0},
@@ -33,8 +34,8 @@
      <file name="index.html">
      <style>
        .space {
-         width: 500px;
          background-color: #fffffb;
+         overflow: hidden;
        }
        .over {
          border:1px solid red;
@@ -103,11 +104,17 @@
        }       
 
        </style>
-     <div mgc-cuisenaire ng-controller="RodCtrl" class="space">
-       <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
-         <div mgc-rod="{{rod}}" class="rod n{{rod.number}}" draggable="true">
+       <div ng-controller="RodCtrl">
+         <div class="well">
+           <div>Drag out a new <input style="width:80px" type="number" ng-model="number" min="1" max="10" ng-value="5"> rod</div>
+           <div mgc-rod-factory="{{number}}"></div>
+         </div>
+         <div mgc-cuisenaire-board class="well space">
+           <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
+           <div mgc-rod="{{$index}}" class="rod n{{rod.number}}" draggable="true">
+         </div>
        </div>
-     </div>
+
      </file>
      <file name="scenario.js">
        it('should display a stack of rods', function() {
@@ -116,13 +123,23 @@
    </example>
    **/
 angular.module('mgc')
-  .directive('mgcCuisenaire', function() {
+  .directive('mgcRodFactory', function() {
+    return {
+      link: function(scope, element, attrs) {
+        attrs.$observe('mgcRodFactory', function(number) {
+          element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
+          element.addClass("rod");
+          element.addClass("n"+number);
+        });
+      }
+    };
+  })
+  .directive('mgcCuisenaireBoard', function() {
     return {
       link: function(scope, element, attrs) {
 
         element.bind("drop", function(e) {
           if (e.stopPropagation) e.stopPropagation();
-          console.log("DROPPED");
           return false; 
         });
 
@@ -147,30 +164,14 @@ angular.module('mgc')
   return {
     restrict: 'A',
     scope: false,
-    link: function (scope, element, attrs) {
+    link: function(scope, element, attrs) {
       
       var rod = scope.rod;
       var el = element;
-/*
-      element.bind("mousedown", function(e) {
-        rod.dragStartX = e.pageX;
-        rod.dragStartY = e.pageY;
-        rod.dragging = true;
-      });
 
-      element.bind("mousemove", function(e) {
-        if(rod.dragging) {
-          element.css("left", ""+e.pageX+"px");
-          element.css("top", ""+e.pageY+"px");
-        }
-      });
-
-      element.bind("mouseup", function(e) {
-        rod.dragging = false;
-      });
-*/
       element.bind("dragstart", function(e) {
         this.style.opacity = '0.5';
+        scope.dragSource = element;
       });
 
       element.bind("click", function(e) {
@@ -181,8 +182,12 @@ angular.module('mgc')
           element.addClass("rotated");
       });
 
-      //$watch('rod.number, function())
       console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
+
+      attrs.$observe('mgcRod', function(value) {
+        console.log('mgcRod = '+value);
+      });
+
     }
   };
 });

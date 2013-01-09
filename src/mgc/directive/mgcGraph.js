@@ -28,11 +28,8 @@
          </dl>   
        </div>
      </doc:source>
-
      <doc:scenario>
-       it('should evaluate functions of x and (x,y)', function() {
-         expect(element('mgc-space').width()).toEqual(300);
-         expect(element('mgc-space').height()).toEqual(200);
+       it('should do something', function() {
        });
      </doc:scenario>
    </doc:example>
