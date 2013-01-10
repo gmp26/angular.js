@@ -110,8 +110,11 @@
            <div mgc-rod-factory="{{number}}"></div>
          </div>
          <div mgc-cuisenaire-board class="well space">
+           <!--
            <div ng-repeat="rod in rods" style="position:relative; top:0px; left:0px">
-           <div mgc-rod="{{$index}}" class="rod n{{rod.number}}" draggable="true">
+             <div mgc-rod="{{$index}}" class="rod n{{rod.number}}" draggable="true">
+           </div>
+           -->
          </div>
        </div>
 
@@ -126,10 +129,16 @@ angular.module('mgc')
   .directive('mgcRodFactory', function() {
     return {
       link: function(scope, element, attrs) {
+        element.bind("dragstart", function(e) {
+          scope.dragSource = element;
+          e.dataTransfer.setData('text/plain', ""+scope.number);
+        });
+
         attrs.$observe('mgcRodFactory', function(number) {
           element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
           element.addClass("rod");
           element.addClass("n"+number);
+          element.attr("draggable", "true");
         });
       }
     };
@@ -140,7 +149,10 @@ angular.module('mgc')
 
         element.bind("drop", function(e) {
           if (e.stopPropagation) e.stopPropagation();
-          return false; 
+          console.log("dropped");
+          var number = e.dataTransfer.getData('text/plain');
+          element.append('<div mgcRod="'+number+'" class="rod n'+number+'" draggable="true">');
+          return false;
         });
 
         element.bind('dragover', function (e) {
@@ -171,7 +183,6 @@ angular.module('mgc')
 
       element.bind("dragstart", function(e) {
         this.style.opacity = '0.5';
-        scope.dragSource = element;
       });
 
       element.bind("click", function(e) {
