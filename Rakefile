@@ -83,6 +83,7 @@ task :concat => :init do
       'src/mgc/directive/mgcEval.js',
       'src/mgc/directive/mgcGraph.js',
       'src/mgc/directive/mgcCuisenaire.js',
+      'src/mgc/directive/mgcSorter.js'
       ])
   
   concat_module('resource', ['src/ngResource/resource.js'])

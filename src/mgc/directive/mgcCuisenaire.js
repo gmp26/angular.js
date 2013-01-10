@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc directive
- * @name mgc.directive:mgcRod
+ * @name mgc.directive:mgcCuisenaire
  *
  * @description
  * Creates a cuisenaire rod manipulative.

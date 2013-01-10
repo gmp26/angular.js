@@ -19,6 +19,7 @@
  * @example
    <doc:example module="mgc">
      <doc:source>
+
      <script>
        function Ctrl($scope) {
            // Variables defined within this scope may be used to evaluate functions
@@ -59,6 +60,7 @@
     
      </div>
      </doc:source>
+
      <doc:scenario>
        it('should evaluate functions of x and (x,y)', function() {
          expect(element('.doc-example-live span:first').html()).toEqual("0.00");
@@ -73,6 +75,7 @@
          expect(element('.doc-example-live span:last').html()).toEqual("10");
        });
      </doc:scenario>
+
    </doc:example>
    */
   angular.module('mgc').directive('mgcEval', ['$funcGen', function($funcGen) {

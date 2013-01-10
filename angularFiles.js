@@ -74,6 +74,7 @@ angularFiles = {
     'src/mgc/directive/mgcEval.js',
     'src/mgc/directive/mgcGraph.js',
     'src/mgc/directive/mgcCuisenaire.js',
+    'src/mgc/directive/mgcSorter.js',
     'src/ngMock/angular-mocks.js',
 
     'src/bootstrap/bootstrap.js'
@@ -160,6 +161,7 @@ angularFiles = {
     'src/mgc/directive/mgcEval.js',
     'src/mgc/directive/mgcGraph.js',
     'src/mgc/directive/mgcCuisenaire.js',
+    'src/mgc/directive/mgcSorter.js',
     'test/matchers.js',
     'test/ngMock/*.js',
     'test/ngCookies/*.js',

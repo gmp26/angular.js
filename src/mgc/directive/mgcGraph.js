@@ -34,12 +34,10 @@
      </doc:scenario>
    </doc:example>
    */
-var mgc = angular.module('mgc');
-
-mgc.directive('mgcSpace', function() {
+angular.module('mgc').directive('mgcSpace', function() {
   return {
     restrict: 'EA',
     template: '<div style="width:{{sw}}px; height:{{sh}}px; border:1px solid black"></div>',
     replace: true
   };
-})
+});
