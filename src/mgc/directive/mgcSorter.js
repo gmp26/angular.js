@@ -15,7 +15,7 @@
  * @element CONTAINER
  *
  * @example 
-  <example module="mgc" deps="foo">
+  <example module="mui">
 
     <file name="script.js">
       function SortCtrl($scope) {
@@ -25,21 +25,145 @@
     </file>
 
     <file name="style.css">
-      <style>
-        .foo {border: 1px solid red;}
-      </style>
-      
+      .col1 {
+        width: 30%;
+        display: inline-block;
+        text-align:right;
+        vertical-align:middle;
+      }
+
+      .col2 {
+        width: 60%;
+        display: inline-block;
+        vertical-align:top;
+      }
+
+      .col2.narrow {
+        width:80px;
+      }
+
+      [ui-sortable] {
+        list-style-type:none;
+      }
+
+      [ui-sortable].vertical {
+        display: block; 
+      }
+
+      [ui-sortable].horizontal {
+        display: inline-block;
+      }
+
+      [ui-sortable].vertical li{
+        display: block;
+        padding:5px;
+      }
+
+      [ui-sortable].horizontal li{
+        display: inline; 
+        padding-right: 5px;
+      }
+
+      [ui-sortable] li {
+        background-color: white;
+        padding:5px;
+        margin:10px 5px 10px 5px;
+        border-radius:5px;
+        webkit-border-radius:5px;
+        moz-border-radius:5px;
+        box-shadow: 2px 2px 3px #888888;
+        display: inline;
+      }
+
+      [mgc-order-check].right li {
+        background-color: white;
+        border: 3px solid rgb(128,255,128);
+      }
+
+      [mgc-order-check].wrong li {
+        background-color: rgba(255,255,255,0.5);
+        border: 3px solid rgb(255,200,200);
+      }      
     </file>
 
     <file name="index.html">
+      <div class="col1">
+        Vertical layout class.
+        Given x=2, sort:
+      </div>
       <div ng-controller="SortCtrl" class="col2">
-        <ul ui-sortable mgc-order-check class="vertical" score="spearman" >
-          <li mgc-key="1" draggable="true">I should be 3rd</li>
-          <li mgc-key="2" draggable="true">I should be 4th</li>
-          <li mgc-key="3" draggable="true">I should be second</li>
-          <li mgc-key="4" draggable="true">I should be last</li>
-          <li mgc-key="5" draggable="true">I should be first</li>
+        <ul ui-sortable mgc-order-check class="well vertical" score="spearman" >
+          <li mgc-key="3" >I should be 3rd</li>
+          <li mgc-key="4" >I should be 4th</li>
+          <li mgc-key="2" >I should be second</li>
+          <li mgc-key="5" >I should be last</li>
+          <li mgc-key="1" >I should be first</li>
         </ul>
+        rank correlation = {{spearman | number:2}},<br />or roughly {{ (spearman+1)*50 | number:0}}% correct.
+      </div>
+
+      <br /><hr />
+
+      <div class="col1">
+        Same again, but sorting divs which are untargetted in the CSS.
+      </div>
+      <div ng-controller="SortCtrl" class="col2">
+        <div ui-sortable mgc-order-check class="well vertical" score="spearman" >
+          <div mgc-key="3" >I should be 3rd</div>
+          <div mgc-key="4" >I should be 4th</div>
+          <div mgc-key="2" >I should be second</div>
+          <div mgc-key="5" >I should be last</div>
+          <div mgc-key="1" >I should be first</div>
+        </div>
+        rank correlation = {{spearman | number:2}},<br />or roughly {{ (spearman+1)*50 | number:0}}% correct.
+      </div>
+
+      <br /><hr />
+      <div class="col1">
+        Same again, but sorting spans which are untargetted in the CSS.
+      </div>
+      <div ng-controller="SortCtrl" class="col2">
+        <div ui-sortable mgc-order-check class="well vertical" score="spearman" >
+          <span mgc-key="3" >[3rd]</span>
+          <span mgc-key="4" >[4th]</span>
+          <span mgc-key="2" >[second]</span>
+          <span mgc-key="5" >[last]</span>
+          <span mgc-key="1" >[first]</span>
+        </div>
+        rank correlation = {{spearman | number:2}},<br />or roughly {{ (spearman+1)*50 | number:0}}% correct.
+      </div>
+
+      <br /><hr />
+
+      <div class="col1">
+      Many correct answers.<br />
+      Horizontal layout class.<br />
+      Given x=0, sort:
+      </div>
+      <div ng-controller="SortCtrl" class="col2">
+      <ul ui-sortable mgc-order-check class="horizontal" score="unused">
+      <li mgc-key="1" >1</li>
+      <li mgc-key="-1" >-1</li>
+      <li mgc-key="0" >0</li>
+      <li mgc-key="1" >1</li>
+      <li mgc-key="-1" >-1</li>
+      <li mgc-key="0" >0</li>
+      </ul>
+      </div>
+
+      <br /><hr />
+
+      <div class="col1">
+      No order check at all on this one:
+      </div>
+      <div ng-controller="SortCtrl" class="col2">
+      <ul ui-sortable class="horizontal" score="unused">
+      <li mgc-key="2" >Egg</li>
+      <li mgc-key="1" >Apple</li>
+      <li mgc-key="1" >Carrot</li>
+      <li mgc-key="1" >Burdock</li>
+      <li mgc-key="1" >Dandelion</li>
+      </ul>
       </div>
      </file>
 
@@ -49,7 +173,7 @@
      </file>
    </example>
 */
-angular.module('mgc')
+angular.module('mui',['mgc','ui'])
 .directive("mgcKey", function() {
   return {
     scope: false, // required so parent shares scope.mgcKeys
@@ -132,7 +256,7 @@ angular.module('mgc')
         }
       };
 
-      element.on("sortstop", recheck);
+      element.bind("sortstop", recheck);
       check();
 
     }

@@ -136,4 +136,4 @@ var funcGen = function() {
 };
 
 // define mgc module and register funcGen service
-angular.module('mgc',[]).value('$funcGen', funcGen());
+angular.module('mgc', []).value('$funcGen', funcGen());

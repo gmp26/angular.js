@@ -23,7 +23,7 @@
           ui = /index-ui[^\.]*\.html$/.test(baseUrl),
           jQuery = /index-jq[^\.]*\.html$/.test(baseUrl),
           debug = /index[^\.]*-debug\.html$/.test(baseUrl),
-          production = location.hostname === 'docs.angularjs.org',
+          production = location.hostname === 'nrich.maths.org',
           headEl = document.getElementsByTagName('head')[0],
           sync = true,
           angularVersion = {
@@ -31,27 +31,34 @@
             stable: '"NG_VERSION_STABLE"'
           };
 
+      //TODO: 
+      // force NRICH mode
+      // jQuery = true;
+      // ui = true;
+
       addTag('base', {href: baseUrl});
       addTag('link', {rel: 'stylesheet', href: 'css/bootstrap.min.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/font-awesome.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
-      if (jQuery) addTag('script', {src: debug ? 'js/jquery.js' : 'js/jquery.min.js'});
-      if(ui) {
-        addTag('script', {src: debug ? 'js/jquery-ui.js' : 'js/jquery-ui.min.js'});
-        addTag('script', {src: debug ? 'js/angular-ui.js' : 'js/angular-ui.min.js'});
-      }
+      if (jQuery || ui) addTag('script', {src: debug ? 'js/jquery.js' : 'js/jquery.min.js'});
       addTag('script', {src: path('angular.js')}, sync);
       addTag('script', {src: path('angular-resource.js') }, sync);
       addTag('script', {src: path('angular-cookies.js') }, sync);
       addTag('script', {src: path('angular-sanitize.js') }, sync);
-      addTag('script', {src: path('angular-mgc.js') }, sync);
       addTag('script', {src: path('angular-bootstrap.js') }, sync);
       addTag('script', {src: path('angular-bootstrap-prettify.js') }, sync);
+      if(ui) {
+         addTag('script', {src: debug ? 'js/jquery-ui.js' : 'js/jquery-ui.min.js'}, sync);
+         addTag('script', {src: debug ? 'js/angular-ui.js' : 'js/angular-ui.min.js'}, sync);
+      }
+      addTag('script', {src: debug ? path('angular-mgc.js') : path('angular-mgc.min.js')}, sync);
       addTag('script', {src: 'js/docs.js'}, sync);
       addTag('script', {src: 'docs-keywords.js'}, sync);
 
       function path(name) {
-        if (production) {
+        // TODO: 
+        // force development mode
+        if (false && production) {
           if (name.match(/^angular(-\w+)?\.js/) && !name.match(/bootstrap/)) {
             name =  '//ajax.googleapis.com/ajax/libs/angularjs/' +
                 angularVersion.stable +
