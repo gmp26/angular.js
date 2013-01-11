@@ -137,6 +137,9 @@ task :docs => [:init] do
     path_to('docs/index-jq.html'),
     path_to('docs/index-jq-debug.html'),
     path_to('docs/index-jq-nocache.html'),
+    path_to('docs/index-ui.html'),
+    path_to('docs/index-ui-debug.html'),
+    path_to('docs/index-ui-nocache.html'),
     path_to('docs/docs-scenario.html')
   ].each do |src|
     rewrite_file(src) do |content|

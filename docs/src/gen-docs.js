@@ -62,11 +62,19 @@ function writeTheRest(writesFuture) {
   writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-jq-nocache.html',
                                 writer.replace, {'doc:manifest': ''}));
 
+  writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-ui.html',
+                                writer.replace, {'doc:manifest': ''}));
+
+  writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-ui-nocache.html',
+                                writer.replace, {'doc:manifest': ''}));
 
   writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-debug.html',
                                 writer.replace, {'doc:manifest': ''}));
 
   writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-jq-debug.html',
+                                writer.replace, {'doc:manifest': ''}));
+
+  writesFuture.push(writer.copy('docs/src/templates/index.html', 'index-ui-debug.html',
                                 writer.replace, {'doc:manifest': ''}));
 
   writesFuture.push(writer.symlinkTemplate('offline.html'));
