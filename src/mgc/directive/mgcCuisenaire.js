@@ -149,9 +149,9 @@ angular.module('mgc')
 
         element.bind("drop", function(e) {
           if (e.stopPropagation) e.stopPropagation();
-          console.log("dropped");
           var number = e.dataTransfer.getData('text/plain');
-          element.append('<div mgcRod="'+number+'" class="rod n'+number+'" draggable="true">');
+          console.log("dropped "+number);
+          //element.append('<div mgcRod="'+number+'" class="rod n'+number+'" draggable="true">');
           return false;
         });
 
