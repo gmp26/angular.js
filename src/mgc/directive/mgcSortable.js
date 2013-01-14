@@ -17,14 +17,34 @@
  * @element CONTAINER
  * @example
    <example module="mgc">
+
      <file name="index.html">
+     <!-- a simple sortable container -->
      <div mgc-sortable>
       <div>item 2 - sortme</div>
       <div>item 3 - sortme</div>
       <div>item 1 - sortme</div>
       <div>item 4 - sortme</div>
      </div>
+     <hr />
+     <!-- a sortable list where the list is in a model in MyItemController -->
+     <div ng-controller="MyItemController">
+       <ul mgc-sortable ng-model="items">
+         <li ng-repeat="item in items">{{item}}</li>
+       </ul>
+     <p>
+     <!-- The model should change with any reordering. -->
+     The first item is {{items | limitTo:1}}, and the last item is {{items | limitTo: -1}}.
+     </p>
+     </div>
      </file>
+
+     <file name="script.js">
+       angular.module('mgc').controller("MyItemController", ['$scope', function($scope) {
+         $scope.items = ["Two", "Three", "One", "Four", "Five"];
+       }]);
+     </file>
+
      <file name="scenario.js">
        it('should allow user to sort a container', function() {
        });

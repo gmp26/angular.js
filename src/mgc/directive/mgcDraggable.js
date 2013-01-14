@@ -21,7 +21,17 @@
       <div mgc-draggable>item 3 - drag me</div>
       <div mgc-draggable>item 1 - drag me</div>
       <div mgc-draggable>item 4 - drag me</div>
-      <div mgc-draggable>Drag me too <img mgc-draggable src="http://angularjs.org/img/AngularJS-small.png"></div>
+      <div mgc-draggable>
+        Drag me too 
+        <img mgc-draggable src="http://angularjs.org/img/AngularJS-small.png">
+      </div>
+     </file>
+     <file name="script.js">
+       angular.module('mgc').value('mgc.config', {
+         draggable: {
+           stack: '*' // option which causes all dragged item to rise to top.
+         }
+       });
      </file>
      <file name="scenario.js">
        it('should allow user to drag the items', function() {
@@ -42,29 +52,29 @@ angular.module('mgc').directive('mgcDraggable', [
         var onStart, onUpdate, opts, _start, _update;
         opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
         if (ngModel != null) {
-          onStart = function(e, mgc) {
-            return mgc.item.data('mgc-draggable-start', mgc.item.index());
+          onStart = function(e, ui) {
+            return ui.item.data('mgc-draggable-start', ui.item.index());
           };
-          onUpdate = function(e, mgc) {
+          onUpdate = function(e, ui) {
             var end, start;
-            start = mgc.item.data('mgc-draggable-start');
-            end = mgc.item.index();
+            start = ui.item.data('mgc-draggable-start');
+            end = ui.item.index();
             ngModel.$modelValue.splice(end, 0, ngModel.$modelValue.splice(start, 1)[0]);
             return scope.$apply();
           };
           _start = opts.start;
-          opts.start = function(e, mgc) {
-            onStart(e, mgc);
+          opts.start = function(e, ui) {
+            onStart(e, ui);
             if (typeof _start === "function") {
-              _start(e, mgc);
+              _start(e, ui);
             }
             return scope.$apply();
           };
           _update = opts.update;
-          opts.update = function(e, mgc) {
-            onUpdate(e, mgc);
+          opts.update = function(e, ui) {
+            onUpdate(e, ui);
             if (typeof _update === "function") {
-              _update(e, mgc);
+              _update(e, ui);
             }
             return scope.$apply();
           };
