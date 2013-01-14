@@ -2,9 +2,8 @@
  * @ngdoc overview
  * @name mgc
  * @description
- *    Extensions to AngularJS to make a DSL for maths education.
+ *    The {@code mgc} module contains extensions to AngularJS to provide a DSL for online education.
  */
-
 
 /**
  * @ngdoc service
@@ -37,12 +36,6 @@
      </doc:source>
    </doc:example>
  */
-
-
-
-//angular.module('mgc', [], function($provide) {
-//    $provide.factory('$funcGen', function() {
-
 var funcGen = function() {
 
 	'use strict';
@@ -135,5 +128,35 @@ var funcGen = function() {
 	};
 };
 
-// define mgc module and register funcGen service
-// angular.module('mgc').value('$funcGen', funcGen());
+/**
+ * @ngdoc service
+ * @name mgc.config
+ * @function
+ *
+ * @description
+ * In code you can use mgc.config to set up options that apply globally to co-operating
+ * directives like mgcDraggable, mgcDroppable and mgcSortable. 
+ *
+ * 
+ * @example 
+   <doc:example module="mgc">
+     <doc:source>
+       <script>
+         angular.module('mgc').value('mgc.config', {
+           draggable: { appendTo: document.body },
+           droppable: { appendTo: document.body },
+           sortable: { appendTo: document.body }
+         });
+       </script>
+       <div>
+         No output. See script.js tab.
+       </div>
+     </doc:source>
+   </doc:example>
+ */
+
+// define mgc module and register services
+angular.module('mgc', [])
+	.value('mgc.funcGen', funcGen())
+	.value('mgc.config', {});
+

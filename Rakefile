@@ -79,10 +79,12 @@ task :concat => :init do
       'src/ngSanitize/filter/linky.js'])
 
   concat_module('mgc', [
-      'src/mgc/funcGen.js',
+      'src/mgc/mgcServices.js',
       'src/mgc/directive/mgcEval.js',
       'src/mgc/directive/mgcGraph.js',
       'src/mgc/directive/mgcCuisenaire.js',
+      'src/mgc/directive/mgcSortable.js',
+      'src/mgc/directive/mgcDraggable.js',
       'src/mgc/directive/mgcSorter.js'
       ])
   

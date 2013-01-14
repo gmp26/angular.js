@@ -78,7 +78,7 @@
 
    </doc:example>
    */
-  angular.module('mgc').directive('mgcEval', ['$funcGen', function($funcGen) {
+  angular.module('mgc').directive('mgcEval', ['mgc.funcGen', function($funcGen) {
     var fg = $funcGen;
 
     return {

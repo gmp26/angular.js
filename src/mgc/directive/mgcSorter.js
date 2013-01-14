@@ -5,17 +5,22 @@
  * @name mgc.directive:mgcOrderCheck
  * @description
  *
- * Add the mgc-order-check attribute to a container element such as <ul> in conjunction
- * with mgc-key attributes on the content (e.g. <li> elements) which users are being asked
- * to put in the correct order.
+ * 1. Add the mgc-order-check attribute to a container element.
+ * 1. Add {@code mgc-key} attributes on the contained elements.
+ * 1. If you want the user to reorder in place, then also add the {@link mgc.directive:mgcSortable mgc-sortable} attribute.
  *
- * Drag and drop reordering is currently obtained by adding the ui-sortable attribute to the
- * container. This currently depends on the angular-ui and jquery-ui javascript frameworks.
+ * mgc-order-check adds 'right' or 'wrong' classes to the container depending on
+ * whether the {@link mgc.directive:mgcKey mgc-key} attributes are ordered or not.
+ *
+ * The scope variable {@code score} will contain Spearman's rank correlation coefficient and can be used
+ * to give a numerical closeness score.
+ *
+ * Depends on jQuery-ui
  * 
  * @element CONTAINER
  *
  * @example 
-  <example module="mui">
+  <example module="mgc">
 
     <file name="script.js">
       function SortCtrl($scope) {
@@ -42,29 +47,29 @@
         width:80px;
       }
 
-      [ui-sortable] {
+      [mgc-sortable] {
         list-style-type:none;
       }
 
-      [ui-sortable].vertical {
+      [mgc-sortable].vertical {
         display: block; 
       }
 
-      [ui-sortable].horizontal {
+      [mgc-sortable].horizontal {
         display: inline-block;
       }
 
-      [ui-sortable].vertical li{
+      [mgc-sortable].vertical li{
         display: block;
         padding:5px;
       }
 
-      [ui-sortable].horizontal li{
+      [mgc-sortable].horizontal li{
         display: inline; 
         padding-right: 5px;
       }
 
-      [ui-sortable] li {
+      [mgc-sortable] li {
         background-color: white;
         padding:5px;
         margin:10px 5px 10px 5px;
@@ -92,7 +97,7 @@
         Given x=2, sort:
       </div>
       <div ng-controller="SortCtrl" class="col2">
-        <ul ui-sortable mgc-order-check class="well vertical" score="spearman" >
+        <ul mgc-sortable mgc-order-check class="well vertical" score="spearman" >
           <li mgc-key="3" >I should be 3rd</li>
           <li mgc-key="4" >I should be 4th</li>
           <li mgc-key="2" >I should be second</li>
@@ -108,7 +113,7 @@
         Same again, but sorting divs which are untargetted in the CSS.
       </div>
       <div ng-controller="SortCtrl" class="col2">
-        <div ui-sortable mgc-order-check class="well vertical" score="spearman" >
+        <div mgc-sortable mgc-order-check class="well vertical" score="spearman" >
           <div mgc-key="3" >I should be 3rd</div>
           <div mgc-key="4" >I should be 4th</div>
           <div mgc-key="2" >I should be second</div>
@@ -123,7 +128,7 @@
         Same again, but sorting spans which are untargetted in the CSS.
       </div>
       <div ng-controller="SortCtrl" class="col2">
-        <div ui-sortable mgc-order-check class="well vertical" score="spearman" >
+        <div mgc-sortable mgc-order-check class="well vertical" score="spearman" >
           <span mgc-key="3" >[3rd]</span>
           <span mgc-key="4" >[4th]</span>
           <span mgc-key="2" >[second]</span>
@@ -141,7 +146,7 @@
       Given x=0, sort:
       </div>
       <div ng-controller="SortCtrl" class="col2">
-      <ul ui-sortable mgc-order-check class="horizontal" score="unused">
+      <ul mgc-sortable mgc-order-check class="horizontal" score="unused">
       <li mgc-key="1" >1</li>
       <li mgc-key="-1" >-1</li>
       <li mgc-key="0" >0</li>
@@ -157,7 +162,7 @@
       No order check at all on this one:
       </div>
       <div ng-controller="SortCtrl" class="col2">
-      <ul ui-sortable class="horizontal" score="unused">
+      <ul mgc-sortable class="horizontal" score="unused">
       <li mgc-key="2" >Egg</li>
       <li mgc-key="1" >Apple</li>
       <li mgc-key="1" >Carrot</li>
@@ -173,17 +178,7 @@
      </file>
    </example>
 */
-angular.module('mui',['mgc','ui'])
-.directive("mgcKey", function() {
-  return {
-    scope: false, // required so parent shares scope.mgcKeys
-    restrict: "EACM", 
-    link: function(scope, element, attrs) {
-      if(scope.mgcKeys === undefined) scope.mgcKeys=[];
-      scope.mgcKeys.push(attrs.mgcKey);     
-    }
-  };  
-})
+angular.module('mgc')
 .directive('mgcOrderCheck', function() {
   
   var spearman = function(ar1, ar2) {
@@ -261,4 +256,26 @@ angular.module('mui',['mgc','ui'])
 
     }
   };
+})
+/**
+ * @ngdoc directive
+ * @name mgc.directive:mgcKey
+ * @description
+ *
+ * 1. Add the mgc-key attribute to items in an {@link mgc.directive:mgcOrderCheck mgc-order-check} container 
+ * to indicate the desired ranking.
+ *
+ * Depends on jQuery-ui
+ * 
+ * @element CONTAINER
+ */
+.directive("mgcKey", function() {
+  return {
+    scope: false, // required so parent shares scope.mgcKeys
+    restrict: "EACM", 
+    link: function(scope, element, attrs) {
+      if(scope.mgcKeys === undefined) scope.mgcKeys=[];
+      scope.mgcKeys.push(attrs.mgcKey);     
+    }
+  };  
 });

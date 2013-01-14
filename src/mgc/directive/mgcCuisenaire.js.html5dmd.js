@@ -120,12 +120,11 @@ angular.module('mgc')
   .directive('mgcRodFactory', function() {
     return {
       link: function(scope, element, attrs) {
-        /*
         element.bind("dragstart", function(e) {
           scope.dragSource = element;
           e.dataTransfer.setData('text/plain', ""+scope.number);
         });
-        */
+
         attrs.$observe('mgcRodFactory', function(number) {
           element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
           element.addClass("rod");
@@ -140,6 +139,32 @@ angular.module('mgc')
     return {
       link: function(scope, element, attrs) {
 
+        scope.boardX = element.pageX;
+        scope.boardY = element.pageY;
+
+        element.bind("drop", function(e) {
+          if (e.stopPropagation) e.stopPropagation();
+          var number = e.dataTransfer.getData('text/plain');
+          console.log("dropped "+number);
+          //element.append('<div mgcRod="'+number+'" class="rod n'+number+'" draggable="true">');
+          scope.$apply(function(){
+            scope.rods.push({number: number, horizontal:true, x:0, y:0});
+          });
+          return false;
+        });
+
+        element.bind('dragover', function (e) {
+          if (e.preventDefault) e.preventDefault(); // allows us to drop
+          element.addClass('over');
+          //e.dataTransfer.dropEffect = 'copy';
+          return false;
+        });
+
+        // to get IE to work
+        element.bind('dragenter', function (e) {
+          element.addClass('over');
+          return false;
+        });
 
       }
     }; 
@@ -154,7 +179,6 @@ angular.module('mgc')
       var rod = scope.rod;
       var el = element;
 
-/*
       element.bind("dragstart", function(e) {
         this.style.opacity = '0.5';
       });
@@ -166,7 +190,7 @@ angular.module('mgc')
         else 
           element.addClass("rotated");
       });
-*/
+
       console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
 
       attrs.$observe('mgcRod', function(value) {

@@ -31,18 +31,23 @@
             stable: '"NG_VERSION_STABLE"'
           };
 
+      // fixme
+      ui = true;
+      jQuery = true;
+      debug = true;
+
       addTag('base', {href: baseUrl});
       addTag('link', {rel: 'stylesheet', href: 'css/bootstrap.min.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/font-awesome.css', type: 'text/css'});
       addTag('link', {rel: 'stylesheet', href: 'css/docs.css', type: 'text/css'});
-      if (jQuery || ui) addTag('script', {src: debug ? 'js/jquery.js' : 'js/jquery.min.js'});
+      if (jQuery || ui) addTag('script', {src: debug ? 'js/jquery.js' : 'js/jquery.min.js'}, sync);
       addTag('script', {src: path('angular.js')}, sync);
       addTag('script', {src: path('angular-resource.js') }, sync);
       addTag('script', {src: path('angular-cookies.js') }, sync);
       addTag('script', {src: path('angular-sanitize.js') }, sync);
       if(ui) {
         addTag('script', {src: debug ? 'js/jquery-ui.js' : 'js/jquery-ui.min.js'}, sync);
-        addTag('script', {src: debug ? 'js/angular-ui.js' : 'js/angular-ui.min.js'}, sync);
+//        addTag('script', {src: debug ? 'js/angular-ui.js' : 'js/angular-ui.min.js'}, sync);
       }
       addTag('script', {src: path('angular-mgc.js') }, sync);
       addTag('script', {src: path('angular-bootstrap.js') }, sync);
