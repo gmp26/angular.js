@@ -17,19 +17,38 @@
  * @example
    <example module="mgc">
      <file name="index.html">
-      <div mgc-draggable>item 2 - drag me</div>
-      <div mgc-draggable>item 3 - drag me</div>
+      <div mgc-draggable class="special">item 2 - droppable</div>
+      <div mgc-draggable class="special">item 3 - droppable</div>
       <div mgc-draggable>item 1 - drag me</div>
       <div mgc-draggable>item 4 - drag me</div>
       <div mgc-draggable>
-        Drag me too 
-        <img mgc-draggable src="http://angularjs.org/img/AngularJS-small.png">
+        <img src="http://angularjs.org/img/AngularJS-small.png">
       </div>
+      <div mgc-droppable style="width:300px; height:100px; background-color:#fff">
+        drop here.
+      <div>
+     </file>
+     <file name="style.css">
+       .dragover {
+         border: 2px solid #fc0;
+       }
+       .special {
+         background-color: #faf;
+         width:120px;
+       }
      </file>
      <file name="script.js">
        angular.module('mgc').value('mgc.config', {
          draggable: {
            stack: '*' // option which causes all dragged item to rise to top.
+         },
+         droppable: {
+           accept: '.special', 
+           hoverClass: 'dragover',
+           drop: function(event, ui) {
+             ui.draggable.removeClass("special");
+             ui.draggable.draggable("disable");
+           }
          }
        });
      </file>
@@ -41,45 +60,31 @@
    **/
 angular.module('mgc').directive('mgcDraggable', [
   'mgc.config', function(mgcConfig) {
-    var options;
-    options = {};
+    var options = {};
     if (mgcConfig.draggable != null) {
       angular.extend(options, mgcConfig.draggable);
     }
     return {
-      require: '?ngModel',
       link: function(scope, element, attrs, ngModel) {
-        var onStart, onUpdate, opts, _start, _update;
+        var opts;
         opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
-        if (ngModel != null) {
-          onStart = function(e, ui) {
-            return ui.item.data('mgc-draggable-start', ui.item.index());
-          };
-          onUpdate = function(e, ui) {
-            var end, start;
-            start = ui.item.data('mgc-draggable-start');
-            end = ui.item.index();
-            ngModel.$modelValue.splice(end, 0, ngModel.$modelValue.splice(start, 1)[0]);
-            return scope.$apply();
-          };
-          _start = opts.start;
-          opts.start = function(e, ui) {
-            onStart(e, ui);
-            if (typeof _start === "function") {
-              _start(e, ui);
-            }
-            return scope.$apply();
-          };
-          _update = opts.update;
-          opts.update = function(e, ui) {
-            onUpdate(e, ui);
-            if (typeof _update === "function") {
-              _update(e, ui);
-            }
-            return scope.$apply();
-          };
-        }
         return element.draggable(opts);
+      }
+    };
+  }
+])
+.directive('mgcDroppable', [
+  'mgc.config', function(mgcConfig) {
+    var options = {};
+    if (mgcConfig.droppable != null) {
+      angular.extend(options, mgcConfig.droppable);
+    }
+    return {
+      link: function(scope, element, attrs, ngModel) {
+        var opts;
+        opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
+        angular.forEach(opts, function(val, key) {console.log("opts["+key+"]="+val);});
+        return element.droppable(opts);
       }
     };
   }

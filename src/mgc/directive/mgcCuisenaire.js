@@ -117,9 +117,17 @@
    </example>
    **/
 angular.module('mgc')
-  .directive('mgcRodFactory', function() {
+  .directive('mgcRodFactory', ['mgc.config', function(mgcConfig) {
+
+    var options = {};
     return {
       link: function(scope, element, attrs) {
+        var opts;
+        
+        opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
+        if (mgcConfig.droppable !== null) {
+          angular.extend(options, mgcConfig.draggable);
+        }
         /*
         element.bind("dragstart", function(e) {
           scope.dragSource = element;
@@ -131,11 +139,12 @@ angular.module('mgc')
           element.addClass("rod");
           element.addClass("factory");
           element.addClass("n"+number);
-          element.attr("draggable", "true");
         });
+
+        return element.draggable(opts);
       }
     };
-  })
+  }])
   .directive('mgcCuisenaireBoard', function() {
     return {
       link: function(scope, element, attrs) {
@@ -144,35 +153,44 @@ angular.module('mgc')
       }
     }; 
   })
-  .directive('mgcRod', function() {
+  .directive('mgcRod', ['mgc.config', function(mgcConfig) {
 
-  return {
-    restrict: 'A',
-    scope: false,
-    link: function(scope, element, attrs) {
-      
-      var rod = scope.rod;
-      var el = element;
+    var options = {};
+    return {
+      restrict: 'A',
+      scope: false,
+      link: function(scope, element, attrs) {
+        
+        var rod = scope.rod;
+        var el = element;
+        var opts;
+        
+        opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
+        if (mgcConfig.droppable !== null) {
+          angular.extend(options, mgcConfig.draggable);
+        }
 
-/*
-      element.bind("dragstart", function(e) {
-        this.style.opacity = '0.5';
-      });
+  /*
+        element.bind("dragstart", function(e) {
+          this.style.opacity = '0.5';
+        });
+  */
 
-      element.bind("click", function(e) {
-        console.log("click @"+e.pageX + "," + e.pageY);
-        if(element.hasClass("rotated"))
-          element.removeClass("rotated");
-        else 
-          element.addClass("rotated");
-      });
-*/
-      console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
+        element.bind("click", function(e) {
+          console.log("click @"+e.pageX + "," + e.pageY);
+          if(element.hasClass("rotated"))
+            element.removeClass("rotated");
+          else 
+            element.addClass("rotated");
+        });
+        console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
 
-      attrs.$observe('mgcRod', function(value) {
-        console.log('mgcRod = '+value);
-      });
+        attrs.$observe('mgcRod', function(value) {
+          console.log('mgcRod = '+value);
+        });
 
+
+      return element.draggable(opts);
     }
   };
-});
+}]);
