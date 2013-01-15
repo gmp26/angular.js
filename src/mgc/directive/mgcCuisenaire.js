@@ -179,7 +179,6 @@ angular.module('mgc')
           //});
         });
       
-
         return element.draggable({
           helper: 'clone', 
           appendTo:"[mgc-cuisenaire-board]",
