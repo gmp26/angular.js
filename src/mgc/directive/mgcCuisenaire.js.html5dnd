@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc directive
- * @name mgc.directive:mgcCuisenaire
+ * @name mgc.directive:mgcCuisenaireHTML5DnD
  *
  * @description
  * Creates a cuisenaire rod manipulative.
@@ -117,7 +117,7 @@
    </example>
    **/
 angular.module('mgc')
-  .directive('mgcRodFactory', function() {
+  .directive('mgcRodFactory5', function() {
     return {
       link: function(scope, element, attrs) {
         element.bind("dragstart", function(e) {
@@ -135,7 +135,7 @@ angular.module('mgc')
       }
     };
   })
-  .directive('mgcCuisenaireBoard', function() {
+  .directive('mgcCuisenaireBoard5', function() {
     return {
       link: function(scope, element, attrs) {
 
@@ -169,7 +169,7 @@ angular.module('mgc')
       }
     }; 
   })
-  .directive('mgcRod', function() {
+  .directive('mgcRod5', function() {
 
   return {
     restrict: 'A',

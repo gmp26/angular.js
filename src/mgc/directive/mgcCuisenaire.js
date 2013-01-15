@@ -12,26 +12,41 @@
    <example module="mgc">
      <file name="script.js">
        function RodCtrl($scope) {
-           // Variables defined within this scope may be used to evaluate functions
-           // defined within the same scope. So here, we can define functions of
-           // x, of y, or of (x,y).
-           $scope.number = 5;
+           // Variables that control the rod model
+           $scope.number = 5; // length of the factory rod is initially 5
            $scope.rodUnit = 30; // pixels
-           $scope.rods = [];
+           $scope.rods = []; // array of rods on stage
        };
      </file>
-     <file name="index.html">
-     <style>
+     <file name="style.css">
+
+       .cloner.vertical {
+         min-height:300px;
+         vertical-align:top;
+         display:inline-block;
+       }
+       .cloner.horizontal {
+         min-width: 300px;
+       }
        .space {
          background-color: #fffffb;
-         overflow: hidden;
          position: relative;
+         min-width:300px;
+         min-height:300px;
+         vertical-align:top;
+         display:inline-block;
        }
-       .over {
+       .clipped {
+         overflow:hidden;
+       }
+       .board-hover {
+         border:1px solid blue;
+       }
+       .board-active {
          border:1px solid red;
        }
        .rod {
-         height: 30px;
+         height: 26px;
          border: 2px solid #888;
          -webkit-border-radius: 3px;
          -moz-border-radius: 3px;
@@ -44,67 +59,85 @@
          -webkit-transition: -webkit-transform 0.25s;
          -o-transition: -o-transform 0.25s;
 
-         transform: rotate(45deg);
-         -webkit-transform-origin:0% 0%; 
+         -webkit-transform-origin:50% 50%; 
 
          cursor: move;
        }
        .factory {
          position:relative;
+         z-index: 100;
        }
-       .rotated {
-         -webkit-transform: rotate(90deg);
-       }
+
        .n1 {
-         width: 30px;
+         height: 26px;
+         width: 26px;
          background-color: #ffffff;
        }
        .n2 {
-         width: 60px;
+         height: 56px;
+         width: 56px;
          background-color: #ff0000;
        }
        .n3 {
-         width: 90px;
+         height: 86px;
+         width: 86px;
          background-color: #88cc44;
        }       
        .n4 {
-         width: 120px;
+         height: 116px;
+         width: 116px;
          background-color: #98105c;
        }
        .n5 {
-         width: 150px;
+         height: 146px;
+         width: 146px;
          background-color: #ffd124;
        }    
        .n6 {
-         width: 180px;
+         height: 176px;
+         width: 176px;
          background-color: #257570;
        }
        .n7 {
-         width: 210px;
+         height: 206px;
+         width: 206px;
          background-color: #000000;
        }
        .n8 {
-         width: 240px;
+         height: 236px;
+         width: 236px;
          background-color: #783a07;
        }
        .n9 {
-         width: 270px;
+         height: 266px;
+         width: 266px;
          background-color: #2b4eb4;
        }
        .n10 {
-         width: 300px;
+         height: 296px;
+         width: 296px;
          background-color: #ff4b00;
-       }       
+       }
+       .rod.horizontal {
+         height:26px;
+       }  
+       .rod.vertical {
+         width: 26px;
+       }
 
-       </style>
+
+     </file>
+     <file name="index.html">
        <div ng-controller="RodCtrl">
-         <div class="well">
-           <div>Drag out a new <input style="width:80px" type="number" ng-model="number" min="1" max="10" ng-value="5"> rod</div>
-           <div mgc-rod-factory="{{number}}"></div>
+         <div class="well horizontal cloner">
+           <div>Drag out a new <input type="number" ng-model="number" min="1" max="10" ng-value="5"> rod</div>
+           <div mgc-rod-factory="{{number}}" horizontal="true"></div>
          </div>
-         <div mgc-cuisenaire-board class="well space">
-           <div ng-repeat="rod in rods" style="top:{{rodUnit*rod.y}}px; left:{{rodUnit*rod.x}}px">
-             <div mgc-rod="{{$index}}" class="rod n{{rod.number}}" draggable="true">
+         <div class="well vertical cloner" >
+            <div mgc-rod-factory="{{number}}"></div>
+        </div>
+         <div mgc-cuisenaire-board class="well space" >
+           <div ng-repeat="rod in rods" mgc-rod="{{$index}}" class="rod n{{rod.number}} {{rod.horizontal}}" style="top:{{rodUnit*rod.y}}px; left:{{rodUnit*rod.x}}px">
            </div>
          </div>
        </div>
@@ -117,17 +150,11 @@
    </example>
    **/
 angular.module('mgc')
-  .directive('mgcRodFactory', ['mgc.config', function(mgcConfig) {
+  .directive('mgcRodFactory', function() {
 
     var options = {};
     return {
       link: function(scope, element, attrs) {
-        var opts;
-        
-        opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
-        if (mgcConfig.droppable !== null) {
-          angular.extend(options, mgcConfig.draggable);
-        }
         /*
         element.bind("dragstart", function(e) {
           scope.dragSource = element;
@@ -135,25 +162,78 @@ angular.module('mgc')
         });
         */
         attrs.$observe('mgcRodFactory', function(number) {
-          element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
-          element.addClass("rod");
-          element.addClass("factory");
-          element.addClass("n"+number);
+          //scope.$apply(function() {
+            element.removeClass("rod n1 n2 n3 n4 n5 n6 n7 n8 n9 n10"); //remove all classes
+            element.addClass("rod");
+            element.addClass("factory");
+            element.addClass("n"+number);
+          //});
         });
 
-        return element.draggable(opts);
+        attrs.$observe('horizontal', function(value) {
+          //scope.$apply(function() {
+            if(value)
+              element.addClass("horizontal");
+            else
+              element.addClass("vertical");
+          //});
+        });
+      
+
+        return element.draggable({
+          helper: 'clone', 
+          appendTo:"[mgc-cuisenaire-board]",
+          stack: '.rod',
+          start: function(event, ui) {
+            $("[mgc-cuisenaire-board]").removeClass("clipped");
+          }
+        });
+        
       }
     };
-  }])
+  })
   .directive('mgcCuisenaireBoard', function() {
+    var getNumber = function(el) {
+      for(var i=1; i <= 10; i++) {
+        if(el.hasClass("n"+i)) return i;
+      }
+      return null;
+    };
+    var border = 2;
     return {
       link: function(scope, element, attrs) {
-
-
+        var offset = element.offset();
+        element.addClass("clipped");
+        return element.droppable({
+          accept: ".rod",
+          activeClass: "board-hover",
+          hoverClass: "board-active",
+          snap: true,
+          snapMode: "outer",
+          snapTolerance: scope.rodUnit / 2,
+          drop: function( event, ui ) {
+            scope.$apply(function() {
+              var n = getNumber(ui.helper);
+              var x = Math.round(2 * ui.position.left / scope.rodUnit)/2;
+              var y = Math.round(2 * ui.position.top / scope.rodUnit)/2;
+              var horizontal = ui.helper.hasClass("horizontal");
+              element.height(Math.max(element.height(), (y+1)*scope.rodUnit));
+              element.addClass("clipped");
+              var rod = {number: n, x:x, y:y, horizontal:horizontal};
+              if(ui.helper.hasClass("factory")) {
+                scope.rods.push(rod);
+              }
+              else {
+                var id = ui.draggable.attr("mgc-rod");
+                scope.rods[id] = rod;
+              }
+            });
+          }
+        });
       }
     }; 
   })
-  .directive('mgcRod', ['mgc.config', function(mgcConfig) {
+  .directive('mgcRod', function() {
 
     var options = {};
     return {
@@ -163,26 +243,12 @@ angular.module('mgc')
         
         var rod = scope.rod;
         var el = element;
-        var opts;
-        
-        opts = angular.extend({}, options, scope.$eval(attrs.mgcOptions));
-        if (mgcConfig.droppable !== null) {
-          angular.extend(options, mgcConfig.draggable);
-        }
-
-  /*
-        element.bind("dragstart", function(e) {
-          this.style.opacity = '0.5';
+        /*
+        scope.$apply(function() {
+          if(rod.horizontal)
+            element.addClass("horizontal")
         });
-  */
-
-        element.bind("click", function(e) {
-          console.log("click @"+e.pageX + "," + e.pageY);
-          if(element.hasClass("rotated"))
-            element.removeClass("rotated");
-          else 
-            element.addClass("rotated");
-        });
+        */
         console.log("number = "+rod.number+" x="+rod.x+" y="+rod.y+" horiz="+rod.horizontal);
 
         attrs.$observe('mgcRod', function(value) {
@@ -190,7 +256,13 @@ angular.module('mgc')
         });
 
 
-      return element.draggable(opts);
+      return element.draggable({
+        stack: '.rod',
+        snap: true,
+        snapMode: "outer",
+        snapTolerance: scope.rodUnit / 2,
+        appendTo:"[mgc-cuisenaire-board]"
+      });
     }
   };
-}]);
+});
