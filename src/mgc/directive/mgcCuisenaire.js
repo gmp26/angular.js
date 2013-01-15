@@ -131,10 +131,10 @@
        <div ng-controller="RodCtrl">
          <div class="well horizontal cloner">
            <div>Drag out a new <input type="number" ng-model="number" min="1" max="10" ng-value="5"> rod</div>
-           <div mgc-rod-factory="{{number}}" horizontal="true"></div>
+           <div mgc-rod-factory="{{number}}" axis="x"></div>
          </div>
          <div class="well vertical cloner" >
-            <div mgc-rod-factory="{{number}}"></div>
+            <div mgc-rod-factory="{{number}}" axis="y"></div>
         </div>
          <div mgc-cuisenaire-board class="well space" >
            <div ng-repeat="rod in rods" mgc-rod="{{$index}}" class="rod n{{rod.number}} {{rod.horizontal}}" style="top:{{rodUnit*rod.y}}px; left:{{rodUnit*rod.x}}px">
@@ -170,12 +170,12 @@ angular.module('mgc')
           //});
         });
 
-        attrs.$observe('horizontal', function(value) {
+        attrs.$observe('axis', function(value) {
           //scope.$apply(function() {
-            if(value)
-              element.addClass("horizontal");
-            else
+            if(value === "y")
               element.addClass("vertical");
+            else
+              element.addClass("horizontal");
           //});
         });
       
@@ -216,7 +216,7 @@ angular.module('mgc')
               var n = getNumber(ui.helper);
               var x = Math.round(2 * ui.position.left / scope.rodUnit)/2;
               var y = Math.round(2 * ui.position.top / scope.rodUnit)/2;
-              var horizontal = ui.helper.hasClass("horizontal");
+              var horizontal = ui.helper.hasClass("horizontal") ? "horizontal" : "vertical";
               element.height(Math.max(element.height(), (y+1)*scope.rodUnit));
               element.addClass("clipped");
               var rod = {number: n, x:x, y:y, horizontal:horizontal};
