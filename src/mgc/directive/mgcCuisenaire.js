@@ -35,15 +35,16 @@
          min-height:300px;
          vertical-align:top;
          display:inline-block;
+         border:3px solid #ccc;
        }
        .clipped {
          overflow:hidden;
        }
        .board-hover {
-         border:1px solid blue;
+         border:3px dashed #58f;
        }
        .board-active {
-         border:1px solid red;
+         border:3px solid #f85;
        }
        .rod {
          height: 26px;
@@ -76,7 +77,7 @@
        .n2 {
          height: 56px;
          width: 56px;
-         background-color: #ff0000;
+         background-color: #ee0033;
        }
        .n3 {
          height: 86px;
@@ -86,7 +87,7 @@
        .n4 {
          height: 116px;
          width: 116px;
-         background-color: #98105c;
+         background-color: #aa2266;
        }
        .n5 {
          height: 146px;
@@ -96,7 +97,7 @@
        .n6 {
          height: 176px;
          width: 176px;
-         background-color: #257570;
+         background-color: #338877;
        }
        .n7 {
          height: 206px;
@@ -106,17 +107,17 @@
        .n8 {
          height: 236px;
          width: 236px;
-         background-color: #783a07;
+         background-color: #884422;
        }
        .n9 {
          height: 266px;
          width: 266px;
-         background-color: #2b4eb4;
+         background-color: #3355dd;
        }
        .n10 {
          height: 296px;
          width: 296px;
-         background-color: #ff4b00;
+         background-color: #ff6600;
        }
        .rod.horizontal {
          height:26px;
@@ -215,11 +216,24 @@ angular.module('mgc')
               var n = getNumber(ui.helper);
               var x = Math.round(2 * ui.position.left / scope.rodUnit)/2;
               var y = Math.round(2 * ui.position.top / scope.rodUnit)/2;
-              var horizontal = ui.helper.hasClass("horizontal") ? "horizontal" : "vertical";
-              element.height(Math.max(element.height(), (y+1)*scope.rodUnit));
+              var rod, nw, nh;
+              if(ui.helper.hasClass("horizontal")) {
+                rod = {number: n, x:x, y:y, horizontal:"horizontal"};
+                nh = 2;
+                nw = n+1;
+              }
+              else {
+                rod = {number: n, x:x, y:y, horizontal:"vertical"};
+                nh = n+1;
+                nw = 2;
+              }
+              element.width(Math.max(element.width(), (x+nw)*scope.rodUnit));
+              element.height(Math.max(element.height(), (y+nh)*scope.rodUnit));
+
               element.addClass("clipped");
-              var rod = {number: n, x:x, y:y, horizontal:horizontal};
-              if(ui.helper.hasClass("factory")) {
+              console.log("dropped at: "+x+", "+y);
+
+              if(ui.helper.hasClass('factory')) {
                 scope.rods.push(rod);
               }
               else {
