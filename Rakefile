@@ -105,16 +105,26 @@ task :minify => [:init, :concat, :concat_scenario] do
     'angular-bootstrap.js',
     'angular-bootstrap-prettify.js'
   ].each do |file|
-    fork { closure_compile(file) }
+    unless ENV['TRAVIS']
+      fork { closure_compile(file) }
+    else
+      closure_compile(file)
+    end
   end
 
   Process.waitall
 end
 
 
-desc 'Generate version.txt file'
+desc 'Generate version.txt and version.json files'
 task :version => [:init] do
   `echo #{NG_VERSION.full} > #{path_to('version.txt')}`
+  `echo '{
+  "full": "#{NG_VERSION.full}",
+  "major": "#{NG_VERSION.major}",
+  "minor": "#{NG_VERSION.minor}",
+  "dot": "#{NG_VERSION.dot}",
+  "codename": "#{NG_VERSION.codename}"\n}' > #{path_to('version.json')}`
 end
 
 
@@ -267,14 +277,22 @@ def path_to(filename)
 end
 
 
+##
+# returns the 32-bit mode force flags for java compiler if supported, this makes the build much
+# faster
+#
+def java32flags
+  return '-d32 -client' unless Rake::Win32.windows? || `java -version -d32 2>&1`.match(/Error/i)
+end
+
+
 def closure_compile(filename)
   puts "Minifying #{filename} ..."
 
   min_path = path_to(filename.gsub(/\.js$/, '.min.js'))
 
   %x(java \
-        -client \
-        -d32 \
+        #{java32flags()} \
         -jar lib/closure-compiler/compiler.jar \
         --compilation_level SIMPLE_OPTIMIZATIONS \
         --language_in ECMASCRIPT5_STRICT \

@@ -318,7 +318,7 @@ function $CompileProvider($provide) {
       // We can not compile top level text elements since text nodes can be merged and we will
       // not be able to attach scope data to them, so we will wrap them in <span>
       forEach($compileNodes, function(node, index){
-        if (node.nodeType == 3 /* text node */) {
+        if (node.nodeType == 3 /* text node */ && node.nodeValue.match(/\S+/) /* non-empty */ ) {
           $compileNodes[index] = jqLite(node).wrap('<span></span>').parent()[0];
         }
       });
@@ -367,68 +367,75 @@ function $CompileProvider($provide) {
      * @returns {?function} A composite linking function of all of the matched directives or null.
      */
     function compileNodes(nodeList, transcludeFn, $rootElement, maxPriority) {
-     var linkFns = [],
-         nodeLinkFn, childLinkFn, directives, attrs, linkFnFound;
+      var linkFns = [],
+          nodeLinkFn, childLinkFn, directives, attrs, linkFnFound;
 
-     for(var i = 0; i < nodeList.length; i++) {
-       attrs = new Attributes();
+      for(var i = 0; i < nodeList.length; i++) {
+        attrs = new Attributes();
 
-       // we must always refer to nodeList[i] since the nodes can be replaced underneath us.
-       directives = collectDirectives(nodeList[i], [], attrs, maxPriority);
+        // we must always refer to nodeList[i] since the nodes can be replaced underneath us.
+        directives = collectDirectives(nodeList[i], [], attrs, maxPriority);
 
-       nodeLinkFn = (directives.length)
-           ? applyDirectivesToNode(directives, nodeList[i], attrs, transcludeFn, $rootElement)
-           : null;
+        nodeLinkFn = (directives.length)
+            ? applyDirectivesToNode(directives, nodeList[i], attrs, transcludeFn, $rootElement)
+            : null;
 
-       childLinkFn = (nodeLinkFn && nodeLinkFn.terminal || !nodeList[i].childNodes.length)
-           ? null
-           : compileNodes(nodeList[i].childNodes,
-                nodeLinkFn ? nodeLinkFn.transclude : transcludeFn);
+        childLinkFn = (nodeLinkFn && nodeLinkFn.terminal || !nodeList[i].childNodes.length)
+            ? null
+            : compileNodes(nodeList[i].childNodes,
+                 nodeLinkFn ? nodeLinkFn.transclude : transcludeFn);
 
-       linkFns.push(nodeLinkFn);
-       linkFns.push(childLinkFn);
-       linkFnFound = (linkFnFound || nodeLinkFn || childLinkFn);
-     }
+        linkFns.push(nodeLinkFn);
+        linkFns.push(childLinkFn);
+        linkFnFound = (linkFnFound || nodeLinkFn || childLinkFn);
+      }
 
-     // return a linking function if we have found anything, null otherwise
-     return linkFnFound ? compositeLinkFn : null;
+      // return a linking function if we have found anything, null otherwise
+      return linkFnFound ? compositeLinkFn : null;
 
-     function compositeLinkFn(scope, nodeList, $rootElement, boundTranscludeFn) {
-       var nodeLinkFn, childLinkFn, node, childScope, childTranscludeFn;
+      function compositeLinkFn(scope, nodeList, $rootElement, boundTranscludeFn) {
+        var nodeLinkFn, childLinkFn, node, childScope, childTranscludeFn, i, ii, n;
 
-       for(var i = 0, n = 0, ii = linkFns.length; i < ii; n++) {
-         node = nodeList[n];
-         nodeLinkFn = linkFns[i++];
-         childLinkFn = linkFns[i++];
+        // copy nodeList so that linking doesn't break due to live list updates.
+        var stableNodeList = [];
+        for (i = 0, ii = nodeList.length; i < ii; i++) {
+          stableNodeList.push(nodeList[i]);
+        }
 
-         if (nodeLinkFn) {
-           if (nodeLinkFn.scope) {
-             childScope = scope.$new(isObject(nodeLinkFn.scope));
-             jqLite(node).data('$scope', childScope);
-           } else {
-             childScope = scope;
-           }
-           childTranscludeFn = nodeLinkFn.transclude;
-           if (childTranscludeFn || (!boundTranscludeFn && transcludeFn)) {
-             nodeLinkFn(childLinkFn, childScope, node, $rootElement,
-                 (function(transcludeFn) {
-                   return function(cloneFn) {
-                     var transcludeScope = scope.$new();
+        for(i = 0, n = 0, ii = linkFns.length; i < ii; n++) {
+          node = stableNodeList[n];
+          nodeLinkFn = linkFns[i++];
+          childLinkFn = linkFns[i++];
 
-                     return transcludeFn(transcludeScope, cloneFn).
-                         bind('$destroy', bind(transcludeScope, transcludeScope.$destroy));
+          if (nodeLinkFn) {
+            if (nodeLinkFn.scope) {
+              childScope = scope.$new(isObject(nodeLinkFn.scope));
+              jqLite(node).data('$scope', childScope);
+            } else {
+              childScope = scope;
+            }
+            childTranscludeFn = nodeLinkFn.transclude;
+            if (childTranscludeFn || (!boundTranscludeFn && transcludeFn)) {
+              nodeLinkFn(childLinkFn, childScope, node, $rootElement,
+                  (function(transcludeFn) {
+                    return function(cloneFn) {
+                      var transcludeScope = scope.$new();
+                      transcludeScope.$$transcluded = true;
+
+                      return transcludeFn(transcludeScope, cloneFn).
+                          bind('$destroy', bind(transcludeScope, transcludeScope.$destroy));
                     };
                   })(childTranscludeFn || transcludeFn)
-             );
-           } else {
-             nodeLinkFn(childLinkFn, childScope, node, undefined, boundTranscludeFn);
-           }
-         } else if (childLinkFn) {
-           childLinkFn(scope, node.childNodes, undefined, boundTranscludeFn);
-         }
-       }
-     }
-   }
+              );
+            } else {
+              nodeLinkFn(childLinkFn, childScope, node, undefined, boundTranscludeFn);
+            }
+          } else if (childLinkFn) {
+            childLinkFn(scope, node.childNodes, undefined, boundTranscludeFn);
+          }
+        }
+      }
+    }
 
 
     /**
@@ -575,7 +582,7 @@ function $CompileProvider($provide) {
           if (directiveValue == 'element') {
             $template = jqLite(compileNode);
             $compileNode = templateAttrs.$$element =
-                jqLite('<!-- ' + directiveName + ': ' + templateAttrs[directiveName]  + ' -->');
+                jqLite(document.createComment(' ' + directiveName + ': ' + templateAttrs[directiveName] + ' '));
             compileNode = $compileNode[0];
             replaceWith($rootElement, jqLite($template[0]), compileNode);
             childTranscludeFn = compile($template, transcludeFn, terminalPriority);
@@ -718,6 +725,8 @@ function $CompileProvider($provide) {
                 mode = match[1], // @, =, or &
                 lastValue,
                 parentGet, parentSet;
+
+            scope.$$isolateBindings[scopeName] = mode + attrName;
 
             switch (mode) {
 
@@ -929,7 +938,7 @@ function $CompileProvider($provide) {
           }
 
           directives.unshift(derivedSyncDirective);
-          afterTemplateNodeLinkFn = applyDirectivesToNode(directives, $compileNode, tAttrs, childTranscludeFn);
+          afterTemplateNodeLinkFn = applyDirectivesToNode(directives, compileNode, tAttrs, childTranscludeFn);
           afterTemplateChildLinkFn = compileNodes($compileNode.contents(), childTranscludeFn);
 
 

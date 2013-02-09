@@ -125,6 +125,19 @@ describe('$compile', function() {
       expect(element.find('span').text()).toEqual('A<a>B</a>C');
     }));
 
+
+    it('should not wrap root whitespace text nodes in spans', function() {
+      element = jqLite(
+        '<div>   <div>A</div>\n  '+ // The spaces and newlines here should not get wrapped
+        '<div>B</div>C\t\n  '+  // The "C", tabs and spaces here will be wrapped
+        '</div>');
+      $compile(element.contents())($rootScope);
+      var spans = element.find('span');
+      expect(spans.length).toEqual(1);
+      expect(spans.text().indexOf('C')).toEqual(0);
+    });
+
+
     describe('multiple directives per element', function() {
       it('should allow multiple directives per element', inject(function($compile, $rootScope, log){
         element = $compile(
@@ -285,6 +298,25 @@ describe('$compile', function() {
           expect(log).toEqual('LOG; LOG');
         });
       });
+
+
+      it('should allow modifying the DOM structure in post link fn', function() {
+        module(function() {
+          directive('removeNode', valueFn({
+            link: function($scope, $element) {
+              $element.remove();
+            }
+          }));
+        });
+        inject(function($compile, $rootScope) {
+          element = jqLite('<div><div remove-node></div><div>{{test}}</div></div>');
+          $rootScope.test = 'Hello';
+          $compile(element)($rootScope);
+          $rootScope.$digest();
+          expect(element.children().length).toBe(1);
+          expect(element.text()).toBe('Hello');
+        });
+      })
     });
 
     describe('compiler control', function() {
@@ -1506,6 +1538,25 @@ describe('$compile', function() {
         expect(element.text()).toEqual('WORKS');
       });
     });
+
+    it('should support $observe inside link function on directive object', function() {
+      module(function() {
+        directive('testLink', valueFn({
+          templateUrl: 'test-link.html',
+          link: function(scope, element, attrs) {
+            attrs.$observe( 'testLink', function ( val ) {
+              scope.testAttr = val;
+            });
+          }
+        }));
+      });
+      inject(function($compile, $rootScope, $templateCache) {
+        $templateCache.put('test-link.html', '{{testAttr}}' );
+        element = $compile('<div test-link="{{1+2}}"></div>')($rootScope);
+        $rootScope.$apply();
+        expect(element.text()).toBe('3');
+      });
+    });
   });
 
 
@@ -1906,6 +1957,21 @@ describe('$compile', function() {
         compile('<div><span bad-declaration>');
       }).toThrow('Invalid isolate scope definition for directive badDeclaration: xxx');
     }));
+
+    it('should expose a $$isolateBindings property onto the scope', inject(function() {
+      compile('<div><span my-component>');
+
+      expect(typeof componentScope.$$isolateBindings).toBe('object');
+
+      expect(componentScope.$$isolateBindings.attr).toBe('@attr');
+      expect(componentScope.$$isolateBindings.attrAlias).toBe('@attr');
+      expect(componentScope.$$isolateBindings.ref).toBe('=ref');
+      expect(componentScope.$$isolateBindings.refAlias).toBe('=ref');
+      expect(componentScope.$$isolateBindings.reference).toBe('=reference');
+      expect(componentScope.$$isolateBindings.expr).toBe('&expr');
+      expect(componentScope.$$isolateBindings.exprAlias).toBe('&expr');
+
+    }));
   });
 
 
@@ -2222,5 +2288,38 @@ describe('$compile', function() {
         expect(nodeName_(comment)).toBe('#comment');
       });
     });
+
+
+    it('should safely create transclude comment node and not break with "-->"',
+        inject(function($rootScope) {
+      // see: https://github.com/angular/angular.js/issues/1740
+      element = $compile('<ul><li ng-repeat="item in [\'-->\', \'x\']">{{item}}|</li></ul>')($rootScope);
+      $rootScope.$digest();
+
+      expect(element.text()).toBe('-->|x|');
+    }));
+
+
+    it('should add a $$transcluded property onto the transcluded scope', function() {
+      module(function() {
+        directive('trans', function() {
+          return {
+            transclude: true,
+            replace: true,
+            scope: true,
+            template: '<div><span>I:{{$$transcluded}}</span><div ng-transclude></div></div>'
+          };
+        });
+      });
+      inject(function(log, $rootScope, $compile) {
+        element = $compile('<div><div trans>T:{{$$transcluded}}</div></div>')
+            ($rootScope);
+        $rootScope.$apply();
+        expect(jqLite(element.find('span')[0]).text()).toEqual('I:');
+        expect(jqLite(element.find('span')[1]).text()).toEqual('T:true');
+      });
+    });
+
+
   });
 });
