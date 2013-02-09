@@ -1038,6 +1038,12 @@ function $CompileProvider($provide) {
           (attr.$$observers && attr.$$observers[name].$$scope || scope).
             $watch(interpolateFn, function interpolateFnWatchAction(value) {
               attr.$set(name, value);
+
+              // hack to avoid svg attribute errors - uses svgXXX alias for XXX
+              if(name.slice(0,3)==='svg') {
+                 attr.$set(name.slice(3).toLowerCase(), value);
+              }
+
             });
         })
       });
